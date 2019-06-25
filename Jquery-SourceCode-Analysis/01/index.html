@@ -11,6 +11,33 @@
         $().html();
         $.trim();
         $.proxy();
+
+        // 函数的统一管理
+        function fn1() {
+            alert('fn1')
+        }
+        function fn2() {
+            alert('fn2')
+        }
+        var cb = $.Callbacks()
+        cb.add(fn1)
+        cb.add(fn2)
+        cb.fire(); // fn1  fn2
+        cb.remove(fn2)
+
+        // 延迟对象
+        var dfd = $.Deferred()
+        setTimeout(function() {
+            alert(1)
+            dfd.resolve();
+        }, timeout);
+        dfd.done(function() {
+            alert(2)
+        })
+
+        // 数据缓存
+        $('#div').data('name', 'hello') 
+        $('#div').data('name') // hello
     </script>
 </head>
 <body>
