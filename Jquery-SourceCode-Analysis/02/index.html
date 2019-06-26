@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script>
+        // 1.传递window的优势：查找速度和优化压缩
+        // 2.传递undefined作用: 防止修改undefined
+        (function(window,undefined){
+
+        })(window)
+        // 3."use strict": 严格模式
+        // "use strict"
+        // a = 10 //报错
+        // var a = 010 //报错
+
+        // 4.rootjQuery ==> document :优化压缩和可维护
+        // var iSpeed = 10
+        // a = a + iSpeed
+
+        //  5.readyList: 跟DOM加载有关
+
+        // 6.core_strundefined = typeof undefined
+        window.a == undefined  // 低版本可能判断不出来 例如：IE9 xmlNode
+        typeof window.a == 'undefined'
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

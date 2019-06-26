@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JQuery 源码分析</title>
     <script>
-        // 实例方法 和 静态方法
+        // 1.实例方法 和 静态方法
         $().css();
         $().html();
         $.trim();
         $.proxy();
 
-        // 函数的统一管理
+        // 2.函数的统一管理
         function fn1() {
             alert('fn1')
         }
@@ -25,7 +25,7 @@
         cb.fire(); // fn1  fn2
         cb.remove(fn2)
 
-        // 延迟对象
+        // 3.延迟对象
         var dfd = $.Deferred()
         setTimeout(function() {
             alert(1)
@@ -35,7 +35,7 @@
             alert(2)
         })
 
-        // 数据缓存
+        // 4.数据缓存
         $('#div').data('name', 'hello') 
         $('#div').data('name') // hello
     </script>
