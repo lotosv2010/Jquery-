@@ -25,6 +25,25 @@
         // 6.core_strundefined = typeof undefined
         window.a == undefined  // 低版本可能判断不出来 例如：IE9 xmlNode
         typeof window.a == 'undefined'
+
+        // 7._jQuery / _$: 放冲突
+        // 8.class2type = { '[Object String]' : 'string', '[Object Array]' : 'array} : 类型检测
+
+        // 9.jQuery对象定义
+        function jQ() {}
+        jQ.prototype.init = function() {}
+        jQ.prototype.css = function() {}
+        var j = new jQ()
+        j.init()
+        j.css()
+
+        function jQuery() {
+            return new jQuery.prototype.init()
+        }
+        jQuery.prototype.init = function() {}
+        jQuery.prototype.css = function() {}
+        jQuery.prototype.init.prototype = jQuery.prototype
+        jQuery().css()
     </script>
 </head>
 <body>
