@@ -25,7 +25,7 @@
 >> **003 知识点((96, 283) 给JQ对象，添加一些方法和属性)**
 >>> 1.jQuery: 版本  
 >>> 2.constructor: 修正指向问题  [**解决constructor被覆盖问题**]  
->>> 3.init(selector, context, rootjQuery): 初始化和参数管理, selector(元素), context(上下文), rootjQuery（内部使用参数，根节点） 
+>>> 3.init(selector, context, rootjQuery): 初始化和参数管理, selector(元素), context(上下文), rootjQuery(内部使用参数，根节点)  
 >>> 4.selector: 存储选择字符串  
 >>> 5.length: this对象的长度  
 >>> 6.toArray(): 转数组  
