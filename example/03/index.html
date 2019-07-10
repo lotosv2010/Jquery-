@@ -7,121 +7,156 @@
     <title>JQuery 源码分析</title>
     <script src="../../Lib/jquery-2.0.3.js"></script>
     <script>
-        /*
-        jQuery.fn = jQuery.prototype = {
-            jQuery: 版本
-            constructor: 修正指向问题
-            init(): 初始化和参数管理
-            selector: 存储选择字符串
-            length: this对象的长度
-            toArray(): 转数组
-            get(): 转原生集合
-            pushStack(): JQ对象入栈
-            each(): 遍历集合
-            ready(): DMO加载的接口
-            slice(): 集合的截取
-            first(): 集合的第一项
-            last(): 集合的最后一项
-            eq(): 集合的指定项
-            map(): 返回集合
-            end(): 返回集合前一个状态
-            push(): (内部使用)
-            sort(): (内部使用)
-            splice(): (内部使用)
-        }
-        */
-        // ===================================================================== 
-        //  1.jQuery: 版本  
-        console.log($().jquery) // 2.0.3
-
-        // =====================================================================
-        //  2.constructor: 修正指向问题
-        console.log($().constructor) // function jQuery()
-        function Test() {}
-        Test.prototype.constructor = Test
-        console.log(new Test().constructor) // function Test()
-        Test.prototype.constructor = Array  // 修改指向
-        console.log(new Test().constructor)  // function Array()
-
-        // 以下代码会覆盖原型的constructor
-        Test.prototype = {
-            name: 'robin',
-            age: 18
-        }
-        console.log(new Test().constructor) // function Object()
-        // 解决constructor被覆盖问题
-        Test.prototype = {
-            constructor: Test,
-            name: 'robin',
-            age: 18
-        }
-        console.log(new Test().constructor) // function Test()
-
-        // =====================================================================
-        //  3.init(selector, context, rootjQuery): 初始化和参数管理, selector(元素), context(上下文), rootjQuery（内部使用参数，根节点）
         $(function(){
-            $('li').css('background','red')
-            console.log($('li').css('background','red'))
-        })
-        
-        // 第一种情况 ：!selector 
-        $(''),$(null),$(undefined),$(false)
-
-        // 第二种情况 ：typeof selector === "string"
-        $('#div'),$('.box'),$('div'),$('#div div .box') // 选择元素
-        $('<li>'),$('<li>1</li><li>2</li>')  // 创建元素
-
-        if($('<li>') || $('<li>1</li><li>2</li>')) { // $('<li>'),$('<li>1</li><li>2</li>')
-            match = [null, selector, null]
-            match = [null, '<li>', null]
-            match = [null, '<li>1</li><li>2</li>', null]
-        } else { // $('#div'),$('.box'),$('div'),$('#div div .box') || $('<li>hello')
-            match = null  // $('.box'),$('div'),$('#div div .box')
-            match = ['#div1', null, 'div1'] // $('#div')
-            match = ['<li>hello', '<li>', null] // $('<li>hello')
-        }
-
-        if($('<li>') || $('#div1')) { // 能进入的有：$('<li>')  $('#div1')
-            if($('<li>')){ // 进一步判断 ：$('<li>')
-
-            } else { // $('#div1')
-
+            /*
+            jQuery.fn = jQuery.prototype = {
+                jQuery: 版本
+                constructor: 修正指向问题
+                init(): 初始化和参数管理
+                selector: 存储选择字符串
+                length: this对象的长度
+                toArray(): 转数组
+                get(): 转原生集合
+                pushStack(): JQ对象入栈
+                each(): 遍历集合
+                ready(): DMO加载的接口
+                slice(): 集合的截取
+                first(): 集合的第一项
+                last(): 集合的最后一项
+                eq(): 集合的指定项
+                map(): 返回集合
+                end(): 返回集合前一个状态
+                push(): (内部使用)
+                sort(): (内部使用)
+                splice(): (内部使用)
             }
-        } 
+            */
+            // ===================================================================== 
+            //  1.jQuery: 版本  
+            console.log($().jquery) // 2.0.3
 
-        
-        // 第三种情况 
-        $(this),$(document)
-        // 第四种情况 
-        $(function(){})
-        // 第五种情况 
-        $([]),$({})
+            // =====================================================================
+            //  2.constructor: 修正指向问题
+            console.log($().constructor) // function jQuery()
+            function Test() {}
+            Test.prototype.constructor = Test
+            console.log(new Test().constructor) // function Test()
+            Test.prototype.constructor = Array  // 修改指向
+            console.log(new Test().constructor)  // function Array()
 
-        // =====================================================================
-        //  4.selector: 存储选择字符串  
-        //  5.length: this对象的长度  
-        //  6.toArray(): 转数组  
-        //  7.get(): 转原生集合  
-        //  8.pushStack(): JQ对象入栈  
-        //  9.each(): 遍历集合  
-        //  10.ready(): DMO加载的接口  
-        //  11.slice(): 集合的截取  
-        //  12.first(): 集合的第一项  
-        //  13.last(): 集合的最后一项  
-        //  14.eq(): 集合的指定项  
-        //  15.map(): 返回集合  
-        //  16.end(): 返回集合前一个状态  
-        //  17.push(): (内部使用)  
-        //  18.sort(): (内部使用)  
-        //  19.splice(): (内部使用) 
+            // 以下代码会覆盖原型的constructor
+            Test.prototype = {
+                name: 'robin',
+                age: 18
+            }
+            console.log(new Test().constructor) // function Object()
+            // 解决constructor被覆盖问题
+            Test.prototype = {
+                constructor: Test,
+                name: 'robin',
+                age: 18
+            }
+            console.log(new Test().constructor) // function Test()
+
+            // =====================================================================
+            //  3.init(selector, context, rootjQuery): 初始化和参数管理, selector(元素), context(上下文), rootjQuery（=> $(document) 部使用参数，根节点）
+            $(function(){
+                $('li').css('background','red')
+                console.log($('li').css('background','red'))
+            })
+            
+            // 第一种情况 ：!selector 
+            $(''),$(null),$(undefined),$(false)
+
+            // 第二种情况 ：typeof selector === "string"
+
+            /*
+            $('#div'),$('.box'),$('div'),$('#div div .box') // 选择元素
+            $('<li>'),$('<li>1</li><li>2</li>')  // 创建元素
+
+            if($('<li>') || $('<li>1</li><li>2</li>')) { // $('<li>'),$('<li>1</li><li>2</li>')
+                match = [null, selector, null]
+                match = [null, '<li>', null]
+                match = [null, '<li>1</li><li>2</li>', null]
+            } else { // $('#div'),$('.box'),$('div'),$('#div div .box') || $('<li>hello')
+                match = null  // $('.box'),$('div'),$('#div div .box')
+                match = ['#div1', null, 'div1'] // $('#div')
+                match = ['<li>hello', '<li>', null] // $('<li>hello')
+            }
+
+            if($('<li>') || $('#div1')) { // 能进入的有：$('<li>')  $('#div1')
+                if($('<li>')){ // 进一步判断 ：$('<li>')
+
+                } else { // $('#div1')
+
+                }
+            } 
+            */
+            
+            // 第三种情况 
+            $(this),$(document)
+            // 第四种情况 
+            $(function(){}) // => $(document).ready(function() {})
+            // 第五种情况 
+            $([]),$({})
+
+            // =====================================================================
+            //  4.selector: 存储选择字符串  
+            //  5.length: this对象的长度  
+            //  6.toArray(): 转数组  // => makeArray(arr, this)
+                var li = $('li').toArray()
+                console.log(li)
+
+            // =====================================================================
+            //  7.get(): 转原生集合  
+            // var oLi = $('li').get(0)
+            var oLi = $('li').get()
+            console.log(oLi)
+
+            // =====================================================================
+            //  8.pushStack(): JQ对象入栈  
+            var stack = $('div').pushStack($('span'))
+            stack.css('color', 'red')
+            stack.end().css('color', 'aquamarine') // end 返回集合前一个状态
+            console.log(stack)
+
+            // =====================================================================
+            //  9.each(): 遍历集合  
+            //  10.ready(): DMO加载的接口  
+            //  11.slice(): 集合的截取  
+
+            // =====================================================================
+            //  12.first(): 集合的第一项  
+            //  13.last(): 集合的最后一项  
+            //  14.eq(): 集合的指定项  
+            $('li').first().css('color', 'aquamarine')
+            $('li').last().css('color', 'yellow')
+            $('li').eq(1).css('color', 'green')
+
+            // =====================================================================
+            //  15.map(): 返回集合  
+            //  16.end(): 返回集合前一个状态  
+            var arr = ['a', 'b', 'c']
+            var map = $.map(arr, function(element, i) {
+                return element + i
+            })
+            console.log(map)
+            
+            // =====================================================================
+            //  17.push(): (内部使用)  
+            //  18.sort(): (内部使用)  
+            //  19.splice(): (内部使用) 
+        })
     </script>
 </head>
 <body>
-    TODO：目前学习到了第9章
+    TODO：第12章
     <ul>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
     </ul>
+    <div>div</div>
+    <span>span</span>
 </body>
 </html>
