@@ -30,9 +30,11 @@
             splice(): (内部使用)
         }
         */
+        // ===================================================================== 
         //  1.jQuery: 版本  
         console.log($().jquery) // 2.0.3
 
+        // =====================================================================
         //  2.constructor: 修正指向问题
         console.log($().constructor) // function jQuery()
         function Test() {}
@@ -55,6 +57,7 @@
         }
         console.log(new Test().constructor) // function Test()
 
+        // =====================================================================
         //  3.init(selector, context, rootjQuery): 初始化和参数管理, selector(元素), context(上下文), rootjQuery（内部使用参数，根节点）
         $(function(){
             $('li').css('background','red')
@@ -94,6 +97,7 @@
         // 第五种情况 
         $([]),$({})
 
+        // =====================================================================
         //  4.selector: 存储选择字符串  
         //  5.length: this对象的长度  
         //  6.toArray(): 转数组  
