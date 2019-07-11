@@ -7,12 +7,77 @@
     <title>JQuery 源码分析</title>
     <script src="../../Lib/jquery-2.0.3.js"></script>
     <script>
-        $(function(){ 
+        $(function(){
+            // =====================================================================
+            // 1
+            // jquery.extend() === jquery.fn.extend()
+            // 当只写一个对象自变量的时候，是JQ中扩展插件的形式
+            $.extend({  // 扩展工具方法
+                getA:function() {
+                    console.log(`a`)
+                },
+                getB:function() {
+                    console.log(`b`)
+                }
+            })
+            $.getA()
+            $.getB()
+
+            $.fn.extend({ // 扩展JQ实例方法
+                getA:function() {
+                    console.log(`fn->a`)
+                },
+                getB:function() {
+                    console.log(`fn->b`)
+                }
+            })
+            $().getA()
+            $().getB()
+
+            // =====================================================================
+            // 2
+            $.extend() // this -> $ -> this.getA -> $.getA()
+            $().extend() // this -> $.fn -> this.prototype -> this.getA -> $().getA()
+
+            // =====================================================================
+            // 3
+            // 当只写多个对象自变量的时候，后面的对象都是扩展到第一个对象身上
+            var a = {}
+            $.extend(a, { name: 'robin' },{ age: 18 })
+            console.log(a)
+
+            // =====================================================================
+            // 3
+            // 可以做深拷贝和浅拷贝,默认为浅拷贝
+            // 3.1 浅拷贝
+            // c不受影响
+            /*
+            var b = {}
+            var c = { name: 'c' }
+            $.extend(b, c)
+            c.name = 'cc'
+            console.log(b)
+            */
+
+            // c受影响
+            var b = {}
+            var c = { name: { age: 30 } }
+            $.extend(b, c)
+            c.name.age = 20
+            console.log('浅拷贝', b)
+
+            // 3.2 深拷贝
+            var bb = {}
+            var cc = { name: { age: 30 } }
+            $.extend(true, bb, cc)
+            cc.name.age = 20
+            console.log('深拷贝', bb)
+
         })
     </script>
 </head>
 <body>
-        TODO：第13章
+        TODO：第14章
     <ul>
         <li>1</li>
         <li>2</li>
