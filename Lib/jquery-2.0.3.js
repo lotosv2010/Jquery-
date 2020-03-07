@@ -17,48 +17,48 @@
 // the stack via arguments.caller.callee and Firefox dies if
 // you try to trace through "use strict" call chains. (#13335)
 // Support: Firefox 18+
-//"use strict";
-var
+//"use strict"; 
+var  // (21, 94) 定义了一些变量和函数 jQuery = function(){}
 	// A central reference to the root jQuery(document)
-	rootjQuery,
+	rootjQuery, // rootjQuery ==> document :优化压缩和可维护 
 
 	// The deferred used on DOM ready
-	readyList,
+	readyList, // readyList: 跟DOM加载有关
 
 	// Support: IE9
 	// For `typeof xmlNode.method` instead of `xmlNode.method !== undefined`
-	core_strundefined = typeof undefined,
+	core_strundefined = typeof undefined, // core_strundefined = typeof undefined ==> 'undefined'
 
 	// Use the correct document accordingly with window argument (sandbox)
-	location = window.location,
-	document = window.document,
-	docElem = document.documentElement,
+	location = window.location, // 优化压缩和可维护 
+	document = window.document, // 优化压缩和可维护 
+	docElem = document.documentElement, // ==> html优化压缩和可维护 
 
 	// Map over jQuery in case of overwrite
-	_jQuery = window.jQuery,
+	_jQuery = window.jQuery, // 防冲突
 
 	// Map over the $ in case of overwrite
-	_$ = window.$,
+	_$ = window.$, // 防冲突
 
 	// [[Class]] -> type pairs
-	class2type = {},
+	class2type = {}, // ==> class2type = { '[Object String]' : 'string', '[Object Array]' : 'array}  : 类型检测
 
 	// List of deleted data cache ids, so we can reuse them
-	core_deletedIds = [],
+	core_deletedIds = [], // 没有用到
 
-	core_version = "2.0.3",
+	core_version = "2.0.3", // 版本
 
 	// Save a reference to some core methods
-	core_concat = core_deletedIds.concat,
-	core_push = core_deletedIds.push,
-	core_slice = core_deletedIds.slice,
-	core_indexOf = core_deletedIds.indexOf,
-	core_toString = class2type.toString,
-	core_hasOwn = class2type.hasOwnProperty,
-	core_trim = core_version.trim,
+	core_concat = core_deletedIds.concat, // ==> Array.prototype.concat
+	core_push = core_deletedIds.push, // ==> Array.prototype.push
+	core_slice = core_deletedIds.slice, // ==> Array.prototype.slice
+	core_indexOf = core_deletedIds.indexOf, // ==> Array.prototype.indexOf
+	core_toString = class2type.toString, // ==> String.prototype.toString
+	core_hasOwn = class2type.hasOwnProperty, // ==> Object.prototype.hasOwnProperty 
+	core_trim = core_version.trim, // ==> String.prototype.trim
 
 	// Define a local copy of jQuery
-	jQuery = function( selector, context ) {
+	jQuery = function( selector, context ) { // 定义jQuery对象
 		// The jQuery object is actually just the init constructor 'enhanced'
 		return new jQuery.fn.init( selector, context, rootjQuery );
 	},
@@ -82,23 +82,23 @@ var
 	rdashAlpha = /-([\da-z])/gi,
 
 	// Used by jQuery.camelCase as callback to replace()
-	fcamelCase = function( all, letter ) {
+	fcamelCase = function( all, letter ) { // 驼峰命名
 		return letter.toUpperCase();
 	},
 
 	// The ready event handler and self cleanup method
-	completed = function() {
+	completed = function() { // 加载完成后的回调函数
 		document.removeEventListener( "DOMContentLoaded", completed, false );
 		window.removeEventListener( "load", completed, false );
 		jQuery.ready();
 	};
-
+// (96, 283) 给JQ对象，添加一些方法和属性
 jQuery.fn = jQuery.prototype = {
 	// The current version of jQuery being used
-	jquery: core_version,
+	jquery: core_version, // jQuery版本
 
-	constructor: jQuery,
-	init: function( selector, context, rootjQuery ) {
+	constructor: jQuery, // 修正指向问题，解决constructor被覆盖问题
+	init: function( selector, context, rootjQuery ) { // 初始化和参数管理, selector(元素), context(上下文), jQuery(内部使用参数，根节点)
 		var match, elem;
 
 		// HANDLE: $(""), $(null), $(undefined), $(false)
@@ -106,7 +106,7 @@ jQuery.fn = jQuery.prototype = {
 			return this;
 		}
 
-		// Handle HTML strings
+		// Handle HTML strings 选择器
 		if ( typeof selector === "string" ) {
 			if ( selector.charAt(0) === "<" && selector.charAt( selector.length - 1 ) === ">" && selector.length >= 3 ) {
 				// Assume that strings that start and end with <> are HTML and skip the regex check
@@ -123,7 +123,7 @@ jQuery.fn = jQuery.prototype = {
 				if ( match[1] ) {
 					context = context instanceof jQuery ? context[0] : context;
 
-					// scripts is true for back-compat
+					// scripts is true for back-compat 添加JavaScript，jQuery.merge合并数组和对象
 					jQuery.merge( this, jQuery.parseHTML(
 						match[1],
 						context && context.nodeType ? context.ownerDocument || context : document,
@@ -194,18 +194,18 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	// Start with an empty selector
-	selector: "",
+	selector: "", // 存储选择字符串
 
 	// The default length of a jQuery object is 0
-	length: 0,
-
+	length: 0, // this对象的长度 
+	// 转数组 
 	toArray: function() {
 		return core_slice.call( this );
 	},
 
 	// Get the Nth element in the matched element set OR
 	// Get the whole matched element set as a clean array
-	get: function( num ) {
+	get: function( num ) { // 转原生集合
 		return num == null ?
 
 			// Return a 'clean' array
@@ -217,14 +217,14 @@ jQuery.fn = jQuery.prototype = {
 
 	// Take an array of elements and push it onto the stack
 	// (returning the new matched element set)
-	pushStack: function( elems ) {
+	pushStack: function( elems ) { // JQ对象入栈 
 
 		// Build a new jQuery matched element set
-		var ret = jQuery.merge( this.constructor(), elems );
+		var ret = jQuery.merge( this.constructor(), elems ); // 合并数组
 
 		// Add the old object onto the stack (as a reference)
-		ret.prevObject = this;
-		ret.context = this.context;
+		ret.prevObject = this; // 把this添加到 ret 的 prevObject 属性，配合后面的 end 方法使用
+		ret.context = this.context; // 赋值上下文
 
 		// Return the newly-formed element set
 		return ret;
@@ -233,64 +233,64 @@ jQuery.fn = jQuery.prototype = {
 	// Execute a callback for every element in the matched set.
 	// (You can seed the arguments with an array of args, but this is
 	// only used internally.)
-	each: function( callback, args ) {
-		return jQuery.each( this, callback, args );
+	each: function( callback, args ) { // 遍历集合
+		return jQuery.each( this, callback, args ); // 最终调用工具方法
 	},
-
+	// DMO加载的接口
 	ready: function( fn ) {
 		// Add the callback
 		jQuery.ready.promise().done( fn );
 
 		return this;
 	},
-
+	// 集合的截取 
 	slice: function() {
 		return this.pushStack( core_slice.apply( this, arguments ) );
 	},
-
+	// 集合的第一项 
 	first: function() {
 		return this.eq( 0 );
 	},
-
+	// 集合的最后一项
 	last: function() {
 		return this.eq( -1 );
 	},
-
+	// 集合的指定项
 	eq: function( i ) {
 		var len = this.length,
 			j = +i + ( i < 0 ? len : 0 );
 		return this.pushStack( j >= 0 && j < len ? [ this[j] ] : [] );
 	},
-
+	// 返回集合
 	map: function( callback ) {
 		return this.pushStack( jQuery.map(this, function( elem, i ) {
 			return callback.call( elem, i, elem );
 		}));
 	},
-
+	// 返回集合前一个状态
 	end: function() {
 		return this.prevObject || this.constructor(null);
 	},
 
 	// For internal use only.
 	// Behaves like an Array's method, not like a jQuery method.
-	push: core_push,
-	sort: [].sort,
-	splice: [].splice
+	push: core_push, // 内部使用
+	sort: [].sort, // 内部使用
+	splice: [].splice // 内部使用
 };
 
 // Give the init function the jQuery prototype for later instantiation
-jQuery.fn.init.prototype = jQuery.fn;
-
-jQuery.extend = jQuery.fn.extend = function() {
-	var options, name, src, copy, copyIsArray, clone,
+jQuery.fn.init.prototype = jQuery.fn; // 将jQuery.prototype 赋值给 jQuery.prototype.init 的原型
+// (258, 347) extend:JQ的继承方法
+jQuery.extend = jQuery.fn.extend = function() { // jQuery.extend 扩展静态(工具)方法；jQuery.fn.extend 扩展实例方法
+	var options, name, src, copy, copyIsArray, clone, // 定义一些变量
 		target = arguments[0] || {},
 		i = 1,
 		length = arguments.length,
 		deep = false;
 
 	// Handle a deep copy situation
-	if ( typeof target === "boolean" ) {
+	if ( typeof target === "boolean" ) { // 看是不是深拷贝
 		deep = target;
 		target = arguments[1] || {};
 		// skip the boolean and the target
@@ -298,17 +298,17 @@ jQuery.extend = jQuery.fn.extend = function() {
 	}
 
 	// Handle case when target is a string or something (possible in deep copy)
-	if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+	if ( typeof target !== "object" && !jQuery.isFunction(target) ) { // 看参数是否正确
 		target = {};
 	}
 
 	// extend jQuery itself if only one argument is passed
-	if ( length === i ) {
+	if ( length === i ) { // 看是不是插件
 		target = this;
 		--i;
 	}
 
-	for ( ; i < length; i++ ) {
+	for ( ; i < length; i++ ) { // 有多个对象的情况
 		// Only deal with non-null/undefined values
 		if ( (options = arguments[ i ]) != null ) {
 			// Extend the base object
@@ -317,12 +317,12 @@ jQuery.extend = jQuery.fn.extend = function() {
 				copy = options[ name ];
 
 				// Prevent never-ending loop
-				if ( target === copy ) {
+				if ( target === copy ) { // 防止循环引用
 					continue;
 				}
 
 				// Recurse if we're merging plain objects or arrays
-				if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) {
+				if ( deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) ) ) { // 深拷贝
 					if ( copyIsArray ) {
 						copyIsArray = false;
 						clone = src && jQuery.isArray(src) ? src : [];
@@ -335,7 +335,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 					target[ name ] = jQuery.extend( deep, clone, copy );
 
 				// Don't bring in undefined values
-				} else if ( copy !== undefined ) {
+				} else if ( copy !== undefined ) { // 浅拷贝
 					target[ name ] = copy;
 				}
 			}
@@ -345,7 +345,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 	// Return the modified object
 	return target;
 };
-
+// (349, 817) jQuery.extend(): 扩展一些工具方法
 jQuery.extend({
 	// Unique for each copy of jQuery on the page
 	expando: "jQuery" + ( core_version + Math.random() ).replace( /\D/g, "" ),
@@ -874,7 +874,7 @@ rootjQuery = jQuery(document);
  *
  * Date: 2013-06-03
  */
-(function( window, undefined ) {
+(function( window, undefined ) { // (877, 2856) Sizzle: 复杂选择器的实现 
 
 var i,
 	support,
@@ -2877,7 +2877,7 @@ function createOptions( options ) {
  *	stopOnFalse:	interrupt callings when a callback returns false
  *
  */
-jQuery.Callbacks = function( options ) {
+jQuery.Callbacks = function( options ) { // (2880, 3042) Callbacks: 回调对象,对函数的统一管理
 
 	// Convert options from String-formatted to Object-formatted if needed
 	// (we check in cache first)
@@ -3041,7 +3041,7 @@ jQuery.Callbacks = function( options ) {
 	return self;
 };
 jQuery.extend({
-
+	// (3043, 3183) Deferred: 延迟对象,对异步的统一管理
 	Deferred: function( func ) {
 		var tuples = [
 				// action, add listener, listener list, final state
@@ -3181,7 +3181,7 @@ jQuery.extend({
 		return deferred.promise();
 	}
 });
-jQuery.support = (function( support ) {
+jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 	var input = document.createElement("input"),
 		fragment = document.createDocumentFragment(),
 		div = document.createElement("div"),
@@ -3496,7 +3496,7 @@ Data.prototype = {
 data_user = new Data();
 data_priv = new Data();
 
-
+// (3308, 3652) data(): 数据缓存
 jQuery.extend({
 	acceptData: Data.accepts,
 
@@ -3650,7 +3650,7 @@ function dataAttr( elem, key, data ) {
 	}
 	return data;
 }
-jQuery.extend({
+jQuery.extend({ // (3653, 3797) queue()/dequeue(): 队列管理
 	queue: function( elem, type, data ) {
 		var queue;
 
@@ -3799,7 +3799,7 @@ var nodeHook, boolHook,
 	rclass = /[\t\r\n\f]/g,
 	rreturn = /\r/g,
 	rfocusable = /^(?:input|select|textarea|button)$/i;
-
+// (3803, 4299) attr()/prop()/val()/addClass()...: 对元素属性的操作
 jQuery.fn.extend({
 	attr: function( name, value ) {
 		return jQuery.access( this, jQuery.attr, name, value, arguments.length > 1 );
@@ -4296,7 +4296,7 @@ jQuery.each([ "radio", "checkbox" ], function() {
 			return elem.getAttribute("value") === null ? "on" : elem.value;
 		};
 	}
-});
+}); // (4300, 5128) on()/trigger()...: 事件操作的相关方法
 var rkeyEvent = /^key/,
 	rmouseEvent = /^(?:mouse|contextmenu)|click/,
 	rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
@@ -5136,7 +5136,7 @@ var isSimple = /^.[^:#\[\.,]*$/,
 		next: true,
 		prev: true
 	};
-
+// (5140, 6057) DOM操作的相关方法:添加 删除 获取 包装...
 jQuery.fn.extend({
 	find: function( selector ) {
 		var i,
@@ -6054,7 +6054,7 @@ jQuery.fn.extend({
 			}
 		}).end();
 	}
-});
+}); // (6058, 6620) css(): 样式的操作
 var curCSS, iframe,
 	// swappable if display is none or starts with table except "table", "table-cell", or "table-caption"
 	// see here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
@@ -6617,7 +6617,7 @@ jQuery.each({
 	if ( !rmargin.test( prefix ) ) {
 		jQuery.cssHooks[ prefix + suffix ].set = setPositiveNumber;
 	}
-});
+}); // (6621, 7854) 提交的数据和ajax(): ajax()/load()/getJson()
 var r20 = /%20/g,
 	rbracket = /\[\]$/,
 	rCRLF = /\r?\n/g,
@@ -7851,7 +7851,7 @@ jQuery.ajaxTransport(function( options ) {
 			}
 		};
 	}
-});
+}); // (7855, 8584) animate(): 运动的方法
 var fxNow, timerId,
 	rfxtypes = /^(?:toggle|show|hide)$/,
 	rfxnum = new RegExp( "^(?:([+-])=|)(" + core_pnum + ")([a-z%]*)$", "i" ),
@@ -8481,7 +8481,7 @@ jQuery.each({
 		return this.animate( props, speed, easing, callback );
 	};
 });
-
+// (8585, 8792) offset()...: 位置与尺寸的相关方法
 jQuery.speed = function( speed, easing, fn ) {
 	var opt = speed && typeof speed === "object" ? jQuery.extend( {}, speed ) : {
 		complete: fn || !fn && easing ||
@@ -8800,7 +8800,7 @@ jQuery.fn.size = function() {
 
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
-// })();
+// })(); // (8804, 8821) JQ支持模块化的模式
 if ( typeof module === "object" && module && typeof module.exports === "object" ) {
 	// Expose jQuery as module.exports in loaders that implement the Node
 	// module pattern (including browserify). Do not create the global, since
@@ -8823,7 +8823,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 // If there is a window object, that at least has a document property,
 // define jQuery and $ identifiers
 if ( typeof window === "object" && typeof window.document === "object" ) {
-	window.jQuery = window.$ = jQuery;
+	window.jQuery = window.$ = jQuery; // (8826) window.jQuery = window.$ = jQuery
 }
 
 })( window );
