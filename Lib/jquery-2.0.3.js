@@ -349,7 +349,7 @@ jQuery.extend = jQuery.fn.extend = function() { // jQuery.extend 扩展静态(�
 jQuery.extend({
 	// Unique for each copy of jQuery on the page
 	expando: "jQuery" + ( core_version + Math.random() ).replace( /\D/g, "" ),
-
+	// 防止冲突
 	noConflict: function( deep ) {
 		if ( window.$ === jQuery ) {
 			window.$ = _$;
@@ -363,12 +363,12 @@ jQuery.extend({
 	},
 
 	// Is the DOM ready to be used? Set to true once it occurs.
-	isReady: false,
+	isReady: false, // DOM 是否加载完(内部)
 
 	// A counter to track how many items to wait for before
 	// the ready event fires. See #6781
-	readyWait: 1,
-
+	readyWait: 1, // 等待多少文件的计数器(内部)
+	// 推迟 DOM 触发 
 	// Hold (or release) the ready event
 	holdReady: function( hold ) {
 		if ( hold ) {
@@ -377,7 +377,7 @@ jQuery.extend({
 			jQuery.ready( true );
 		}
 	},
-
+	// 准备 DOM 触发
 	// Handle when the DOM is ready
 	ready: function( wait ) {
 
@@ -402,24 +402,24 @@ jQuery.extend({
 			jQuery( document ).trigger("ready").off("ready");
 		}
 	},
-
+	// 是否为函数
 	// See test/unit/core.js for details concerning isFunction.
 	// Since version 1.3, DOM methods and functions like alert
 	// aren't supported. They return false on IE (#2968).
 	isFunction: function( obj ) {
 		return jQuery.type(obj) === "function";
 	},
-
+	// 是否为数组
 	isArray: Array.isArray,
-
+	// 是否为 window
 	isWindow: function( obj ) {
 		return obj != null && obj === obj.window;
 	},
-
+	// 是否为数字, isFinite是否为有限数字
 	isNumeric: function( obj ) {
 		return !isNaN( parseFloat(obj) ) && isFinite( obj );
 	},
-
+	// 判断数据类
 	type: function( obj ) {
 		if ( obj == null ) {
 			return String( obj );
@@ -429,7 +429,7 @@ jQuery.extend({
 			class2type[ core_toString.call(obj) ] || "object" :
 			typeof obj;
 	},
-
+	// 是否为对象自变量
 	isPlainObject: function( obj ) {
 		// Not plain objects:
 		// - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -444,7 +444,7 @@ jQuery.extend({
 		// the "constructor" property of certain host objects, ie. |window.location|
 		// https://bugzilla.mozilla.org/show_bug.cgi?id=814622
 		try {
-			if ( obj.constructor &&
+			if ( obj.constructor && // Object.prototype.hasOwnProperty 判断object有没有一个属性， isPrototypeOf 只有Object.protptype拥有
 					!core_hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
 				return false;
 			}
@@ -456,7 +456,7 @@ jQuery.extend({
 		// |obj| is a plain object, created by {} or constructed with new Object
 		return true;
 	},
-
+	// 是否为空的对象
 	isEmptyObject: function( obj ) {
 		var name;
 		for ( name in obj ) {
@@ -464,11 +464,11 @@ jQuery.extend({
 		}
 		return true;
 	},
-
+	// 抛出异常
 	error: function( msg ) {
 		throw new Error( msg );
 	},
-
+	// 解析节点
 	// data: string of html
 	// context (optional): If specified, the fragment will be created in this context, defaults to document
 	// keepScripts (optional): If true, will include scripts passed in the html string
@@ -485,22 +485,22 @@ jQuery.extend({
 		var parsed = rsingleTag.exec( data ),
 			scripts = !keepScripts && [];
 
-		// Single tag
+		// Single tag // 单标签
 		if ( parsed ) {
 			return [ context.createElement( parsed[1] ) ];
 		}
 
-		parsed = jQuery.buildFragment( [ data ], context, scripts );
+		parsed = jQuery.buildFragment( [ data ], context, scripts ); // 多标签，创建DOM节点，利用文档碎片
 
-		if ( scripts ) {
+		if ( scripts ) { // keepScripts == false
 			jQuery( scripts ).remove();
 		}
 
 		return jQuery.merge( [], parsed.childNodes );
 	},
-
+	// 解析 JSON
 	parseJSON: JSON.parse,
-
+	// 解析 XML
 	// Cross-browser xml parsing
 	parseXML: function( data ) {
 		var xml, tmp;
@@ -515,15 +515,15 @@ jQuery.extend({
 		} catch ( e ) {
 			xml = undefined;
 		}
-
+		// 非IE浏览器解析错误时trycatch不会报错，会创建一个类似这样的节点 ：<parsererror>错误信息</parsererror>
 		if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
 			jQuery.error( "Invalid XML: " + data );
 		}
 		return xml;
 	},
-
+	// 空函数
 	noop: function() {},
-
+	// 全局解析 JS
 	// Evaluates a script in a global context
 	globalEval: function( code ) {
 		var script,
@@ -546,17 +546,17 @@ jQuery.extend({
 			}
 		}
 	},
-
+	// 转驼峰
 	// Convert dashed to camelCase; used by the css and data modules
 	// Microsoft forgot to hump their vendor prefix (#9572)
 	camelCase: function( string ) {
 		return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
 	},
-
+	// 是否为制定节点名(内部)
 	nodeName: function( elem, name ) {
 		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 	},
-
+	// 遍历集合
 	// args is for internal usage only
 	each: function( obj, callback, args ) {
 		var value,
@@ -606,11 +606,11 @@ jQuery.extend({
 
 		return obj;
 	},
-
+	// 去前后空格
 	trim: function( text ) {
 		return text == null ? "" : core_trim.call( text );
 	},
-
+	// 类数组转真数组
 	// results is for internal usage only
 	makeArray: function( arr, results ) {
 		var ret = results || [];
@@ -628,11 +628,11 @@ jQuery.extend({
 
 		return ret;
 	},
-
+	// 数组版indexOf
 	inArray: function( elem, arr, i ) {
 		return arr == null ? -1 : core_indexOf.call( arr, elem, i );
 	},
-
+	// 合并数组
 	merge: function( first, second ) {
 		var l = second.length,
 			i = first.length,
@@ -652,7 +652,7 @@ jQuery.extend({
 
 		return first;
 	},
-
+	// 过滤新数组
 	grep: function( elems, callback, inv ) {
 		var retVal,
 			ret = [],
@@ -671,7 +671,7 @@ jQuery.extend({
 
 		return ret;
 	},
-
+	// 映射新数组
 	// arg is for internal usage only
 	map: function( elems, callback, arg ) {
 		var value,
@@ -704,15 +704,15 @@ jQuery.extend({
 		// Flatten any nested arrays
 		return core_concat.apply( [], ret );
 	},
-
+	// 唯一标识符(内部)
 	// A global GUID counter for objects
 	guid: 1,
-
+	// 改this指向
 	// Bind a function to a context, optionally partially applying any
 	// arguments.
 	proxy: function( fn, context ) {
 		var tmp, args, proxy;
-
+		// ==> $.proxy(obj, 'show')
 		if ( typeof context === "string" ) {
 			tmp = fn[ context ];
 			context = fn;
@@ -736,7 +736,7 @@ jQuery.extend({
 
 		return proxy;
 	},
-
+	// 多功能值操作(内部)
 	// Multifunctional method to get and set values of a collection
 	// The value/s can optionally be executed if it's a function
 	access: function( elems, fn, key, value, chainable, emptyGet, raw ) {
@@ -789,9 +789,9 @@ jQuery.extend({
 				fn.call( elems ) :
 				length ? fn( elems[0], key ) : emptyGet;
 	},
-
+	// 当前时间 
 	now: Date.now,
-
+	// CSS 交换(内部) 
 	// A method for quickly swapping in/out CSS properties to get correct calculations.
 	// Note: this method belongs to the css module but it's needed here for the support module.
 	// If support gets modularized, this method should be moved back to the css module.
@@ -815,7 +815,7 @@ jQuery.extend({
 		return ret;
 	}
 });
-
+// 监测DOM的异步操作(内部)
 jQuery.ready.promise = function( obj ) {
 	if ( !readyList ) {
 
@@ -844,7 +844,7 @@ jQuery.ready.promise = function( obj ) {
 jQuery.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
-
+// 类似数组的判断(内部)
 function isArraylike( obj ) {
 	var length = obj.length,
 		type = jQuery.type( obj );
@@ -2854,7 +2854,7 @@ function createOptions( options ) {
 	});
 	return object;
 }
-
+// 回调对象,对函数的统一管理
 /*
  * Create a callback list using the following parameters:
  *
@@ -2932,14 +2932,14 @@ jQuery.Callbacks = function( options ) { // (2880, 3042) Callbacks: 回调对象
 		self = {
 			// Add a callback or a collection of callbacks to the list
 			add: function() {
-				if ( list ) {
+				if ( list ) { // list ==> [] 转 boolean 为 true
 					// First, we save the current length
 					var start = list.length;
 					(function add( args ) {
 						jQuery.each( args, function( _, arg ) {
 							var type = jQuery.type( arg );
 							if ( type === "function" ) {
-								if ( !options.unique || !self.has( arg ) ) {
+								if ( !options.unique || !self.has( arg ) ) { // unique去重
 									list.push( arg );
 								}
 							} else if ( arg && arg.length && type !== "string" ) {

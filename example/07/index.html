@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 callback
+            function a(n) {
+                console.log(`a-${n}`)
+            }
+            
+            function b(n) {
+                console.log(`b-${n}`)
+            }
+
+            var cb = $.Callbacks()
+            // cb.add(a)
+            // cb.add(b)
+            // debugger
+            // ==> 
+            cb.add(a, b) 
+
+            // ==> 
+            // cb.add([a, b])
+            cb.fire('fire')
+            cb.fire('fire2')
+        })
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
