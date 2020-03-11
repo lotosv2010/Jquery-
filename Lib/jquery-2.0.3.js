@@ -3091,7 +3091,7 @@ jQuery.extend({
 		// Keep pipe for back-compat
 		promise.pipe = promise.then;
 
-		// Add list-specific methods
+		// Add list-specific methods // 映射数组遍历操作
 		jQuery.each( tuples, function( i, tuple ) {
 			var list = tuple[ 2 ],
 				stateString = tuple[ 3 ];
@@ -3117,8 +3117,8 @@ jQuery.extend({
 			deferred[ tuple[0] + "With" ] = list.fireWith;
 		});
 
-		// Make the deferred a promise
-		promise.promise( deferred );
+		// Make the deferred a promise 
+		promise.promise( deferred ); //将promise所有的属性继承到deferred对象
 
 		// Call given func if any
 		if ( func ) {

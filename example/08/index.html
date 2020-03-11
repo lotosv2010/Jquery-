@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 callback
+            var cb = $.Callbacks()
+            setTimeout(function() {
+                console.log(`Callbacks - 1111`)
+                cb.fire()
+            }, 1000)
+
+            cb.add(function() {
+                console.log(`Callbacks - 2222`)
+            })
+
+            // 2 Deferred
+
+            // resolve
+            var dfd = $.Deferred()
+            setTimeout(function() {
+                console.log(`Deferred - resolve - 1111`)
+                dfd.resolve()
+            }, 1000)
+
+            dfd.done(function() {
+                console.log(`Deferred - resolve - 2222`)
+            })
+
+            // reject
+            var dfd2 = $.Deferred()
+            setTimeout(function() {
+                console.log(`Deferred - reject - 1111`)
+                dfd2.reject()
+            }, 1000)
+
+            dfd2.fail(function() {
+                console.log(`Deferred - reject - 2222`)
+            })
+
+            // notify
+            var dfd3 = $.Deferred()
+            setTimeout(function() {
+                console.log(`Deferred - notify - 1111`)
+                dfd3.notify()
+            }, 1000)
+
+            dfd3.progress(function() {
+                console.log(`Deferred - notify - 2222`)
+            })
+
+            // pipe
+            var dfd4 = $.Deferred()
+            setTimeout(function() {
+                dfd4.resolve('hi')
+            }, 1000)
+            var newDfd4 = dfd4.pipe(function() {
+                return arguments[0] + ' robin'
+            })
+            newDfd4.done(function() {
+                console.log(arguments[0])
+            })
+
+            // 3.setTimeout
+            setTimeout(function(){
+                console.log(`setTimeout - 1111`)
+            }, 1000)
+            console.log(`setTimeout - 2222`)
+
+            // 4.when
+            function aaa() {
+                var dfd5 = $.Deferred()
+                dfd5.resolve()
+                // dfd5.reject()
+                // 每个函数必须返回延时对象
+                return dfd5
+            }
+
+            function bbb() {
+                var dfd6 = $.Deferred()
+                dfd6.resolve()
+                // dfd6.reject()
+                // 每个函数必须返回延时对象
+                return dfd6
+            }
+
+            // aaa().done(function() {
+            //     console.log('成功')
+            // })
+
+            $.when(aaa(), bbb()).done(function() {
+                console.log(arguments)
+                console.log('成功')
+            }).fail(function() {
+                console.log('失败')
+            })
+
+            $.when(123, 'abc').done(function() {
+                console.log(arguments)
+            })
+
+        })
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
