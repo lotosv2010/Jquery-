@@ -3304,12 +3304,12 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 	4. _Never_ expose "private" data to user code (TODO: Drop _data, _removeData)
 	5. Avoid exposing implementation details on user objects (eg. expando properties)
 	6. Provide a clear path for implementation upgrade to WeakMap in 2014
-*/
-var data_user, data_priv,
+*/ // (3308, 3652) data(): 数据缓存
+var data_user, data_priv, 
 	rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/,
 	rmultiDash = /([A-Z])/g;
 
-function Data() {
+function Data() { // 构造函数
 	// Support: Android < 4,
 	// Old WebKit does not have Object.preventExtensions/freeze method,
 	// return new empty object instead with no [[set]] accessor
@@ -3323,7 +3323,7 @@ function Data() {
 }
 
 Data.uid = 1;
-
+// 静态方法，判断节点类型
 Data.accepts = function( owner ) {
 	// Accepts only:
 	//  - Node
@@ -3496,7 +3496,7 @@ Data.prototype = {
 data_user = new Data();
 data_priv = new Data();
 
-// (3308, 3652) data(): 数据缓存
+// 对外提供的接口
 jQuery.extend({
 	acceptData: Data.accepts,
 
@@ -3522,7 +3522,7 @@ jQuery.extend({
 		data_priv.remove( elem, name );
 	}
 });
-
+// 实例对象的扩展的方法
 jQuery.fn.extend({
 	data: function( key, value ) {
 		var attrs, name,
@@ -3534,12 +3534,12 @@ jQuery.fn.extend({
 		if ( key === undefined ) {
 			if ( this.length ) {
 				data = data_user.get( elem );
-
+				// 下面的if的作用：获取html5中的，`data-`自定数组的值
 				if ( elem.nodeType === 1 && !data_priv.get( elem, "hasDataAttrs" ) ) {
-					attrs = elem.attributes;
+					attrs = elem.attributes; // 获取元素下面所有属性的集合
 					for ( ; i < attrs.length; i++ ) {
 						name = attrs[ i ].name;
-
+						// 判断找到 `data-xxx`的属性
 						if ( name.indexOf( "data-" ) === 0 ) {
 							name = jQuery.camelCase( name.slice(5) );
 							dataAttr( elem, name, data[ name ] );

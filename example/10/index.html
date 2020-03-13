@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 attr
+            $('#div1').attr('name', 'hello')
+            console.log($('#div1').attr('name'))
+
+            // 对应原生
+            // document.getElementById('div1').setAttribute('name', 'hello')
+            // document.getElementById('div1').getAttribute('name')
+
+            // =====================================================================
+            // 1 prop
+            $('#div1').prop('name1', 'hello1')
+            console.log($('#div1').prop('name1'))
+
+            // 对应原生
+            // document.getElementById('div1')[name1] = 'hello1'
+            // document.getElementById('div1')[name1]
+
+            // =====================================================================
+            // 1 data
+            $('#div1').data('name-data', 'hello data')
+            console.log($('#div1').data('name-data'))
+            // $('#div1').removeData('name-data')
+
+            $.data(document.body, 'age', 30)
+            console.log($.data(document.body, 'age'))
+            // $.removeData(document.body, 'age')
+            console.log($.hasData(document.body, 'age'))
+
+            // 内存泄漏
+            // 1. DOM元素于对象之间相互引用，大部分浏览器就会出现内存泄漏
+            // var oDiv = document.getElementById('div1')
+            // var obj = {}
+
+            // oDiv.name = obj
+            // obj.age = oDiv
+
+        })
+    </script>
+</head>
+<body>
+    <div id="div1">div1</div>
+</body>
+</html>
