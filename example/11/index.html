@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <style>
+        #div1 {
+            width: 100px;
+            height: 100px;
+            background-color: brown;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 对外接口：
+            // queue   ===> push
+            // dequeue ===> shift
+
+            function aaa() {
+                console.log(`function aaa`)
+            }
+
+            function bbb() {
+                console.log(`function bbb`)
+            }
+
+            // $.queue(document, 'q1', aaa)
+            // $.queue(document, 'q1', bbb)
+            $.queue(document, 'q1', [aaa, bbb])
+            console.log($.queue(document, 'q1'))
+
+            $.dequeue(document, 'q1')
+            $.dequeue(document, 'q1')
+            // =====================================================================
+            // 1 实例方法：
+            // $(document.body).queue('q1', aaa)
+            // $(document.body).queue('q1', bbb)
+            $(document.body).queue('q1', [aaa, bbb])
+            console.log($(document.body).queue('q1'))
+            $(document.body).dequeue('q1')
+            $(document.body).dequeue('q1')
+
+            // =====================================================================
+            // 3 demo
+            $('#div1').click(function() {
+                // 1
+                // $(this).animate({width: 300}, 2000)
+                // $(this).animate({height: 300}, 2000)
+                // $(this).animate({left: 300}, 2000)
+
+                // 2
+                // $(this).animate({width: 300}, 2000)
+                // .animate({height: 300}, 2000)
+                // .animate({left: 300}, 2000)
+
+                // 3
+                // $(this).animate({width: 300}, 2000)
+                // .animate({height: 300}, 2000)
+                // .queue('fx', function() {
+                //     // 手动出对，要不然旧卡在这里不执行后续操作
+                //     $(this).dequeue('fx')
+                // })
+                // .queue(function() {
+                //     // 默认为 fx
+                //     $(this).dequeue()
+                // })
+                // .queue(function(next) {
+                //     $(this).css('backgroundColor', 'red')
+                //     next()
+                // })
+                // .animate({left: 300}, 2000)
+
+                // 4
+                // $(this).animate({width: 300}, 2000)
+                // .animate({height: 300}, 2000, function() {
+                //     $(this).css('backgroundColor', 'red')
+                // })
+                // .animate({left: 300}, 2000)
+
+                // 5
+                $(this).animate({width: 300}, 2000)
+                .animate({height: 300}, 2000, function() {
+                    $(this).css('backgroundColor', 'red')
+                })
+                .animate({left: 300}, 2000)
+                .promise().done(function(){
+                    console.log('promise done')
+                })
+            })
+
+        })
+    </script>
+</head>
+<body>
+    <div id="div1">div1</div>
+</body>
+</html>

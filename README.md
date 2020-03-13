@@ -15,3 +15,4 @@
 >> **[08 (3043, 3183) Deferred 延迟对象,对异步的统一管理](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/08-(3043%2C%203183)%20Deferred%E5%BB%B6%E8%BF%9F%E5%AF%B9%E8%B1%A1%2C%E5%AF%B9%E5%BC%82%E6%AD%A5%E7%9A%84%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86.md)**  
 >> **[09 (3184, 3295) support 功能检测](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/09-(3184%2C%203295)%20support%E5%8A%9F%E8%83%BD%E6%A3%80%E6%B5%8B.md)**  
 >> **[10 (3308, 3652) data() 数据缓存](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/05-(349%2C%20817)%20jQuery.extend()%E6%89%A9%E5%B1%95%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E6%96%B9%E6%B3%95.md)**  
+>> **[11 (3653, 3797) queue()/dequeue() 队列管理](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/05-(349%2C%20817)%20jQuery.extend()%E6%89%A9%E5%B1%95%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7%E6%96%B9%E6%B3%95.md)** 

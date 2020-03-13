@@ -3656,13 +3656,13 @@ jQuery.extend({ // (3653, 3797) queue()/dequeue(): 队列管理
 
 		if ( elem ) {
 			type = ( type || "fx" ) + "queue";
-			queue = data_priv.get( elem, type );
+			queue = data_priv.get( elem, type ); // 获取
 
 			// Speed up dequeue by getting out quickly if this is just a lookup
 			if ( data ) {
-				if ( !queue || jQuery.isArray( data ) ) {
-					queue = data_priv.access( elem, type, jQuery.makeArray(data) );
-				} else {
+				if ( !queue || jQuery.isArray( data ) ) { // 第一次没有的时候就创建 || 当第三个参数是数组覆盖所有的
+					queue = data_priv.access( elem, type, jQuery.makeArray(data) ); // 创建一个data缓存
+				} else { // 有了之后就push
 					queue.push( data );
 				}
 			}
@@ -3674,10 +3674,10 @@ jQuery.extend({ // (3653, 3797) queue()/dequeue(): 队列管理
 		type = type || "fx";
 
 		var queue = jQuery.queue( elem, type ),
-			startLength = queue.length,
-			fn = queue.shift(),
+			startLength = queue.length,// 队列的长度
+			fn = queue.shift(), // 出队
 			hooks = jQuery._queueHooks( elem, type ),
-			next = function() {
+			next = function() { // next ===> $.dequeue
 				jQuery.dequeue( elem, type );
 			};
 
@@ -3692,7 +3692,7 @@ jQuery.extend({ // (3653, 3797) queue()/dequeue(): 队列管理
 			// Add a progress sentinel to prevent the fx queue from being
 			// automatically dequeued
 			if ( type === "fx" ) {
-				queue.unshift( "inprogress" );
+				queue.unshift( "inprogress" ); // inprogress 针对运动animate，为了让运动第一次能自动的出队操作，在jQuery.fn.queue中体现
 			}
 
 			// clear up the last queue stop function
@@ -3706,9 +3706,9 @@ jQuery.extend({ // (3653, 3797) queue()/dequeue(): 队列管理
 	},
 
 	// not intended for public consumption - generates a queueHooks object, or returns the current one
-	_queueHooks: function( elem, type ) {
+	_queueHooks: function( elem, type ) { // 作用： 出队结束后清理data中所有的缓存的key
 		var key = type + "queueHooks";
-		return data_priv.get( elem, key ) || data_priv.access( elem, key, {
+		return data_priv.get( elem, key ) || data_priv.access( elem, key, { // 获取 || 设置
 			empty: jQuery.Callbacks("once memory").add(function() {
 				data_priv.remove( elem, [ type + "queue", key ] );
 			})
@@ -3725,7 +3725,7 @@ jQuery.fn.extend({
 			type = "fx";
 			setter--;
 		}
-
+		// 小于就是获取，大于就是设置
 		if ( arguments.length < setter ) {
 			return jQuery.queue( this[0], type );
 		}
@@ -3738,7 +3738,7 @@ jQuery.fn.extend({
 				// ensure a hooks for this queue
 				jQuery._queueHooks( this, type );
 
-				if ( type === "fx" && queue[0] !== "inprogress" ) {
+				if ( type === "fx" && queue[0] !== "inprogress" ) { // 第一次入队 inprogress 不存在
 					jQuery.dequeue( this, type );
 				}
 			});
@@ -3750,7 +3750,7 @@ jQuery.fn.extend({
 	},
 	// Based off of the plugin by Clint Helfers, with permission.
 	// http://blindsignals.com/index.php/2009/07/jquery-delay/
-	delay: function( time, type ) {
+	delay: function( time, type ) { // 延迟队列的执行
 		time = jQuery.fx ? jQuery.fx.speeds[ time ] || time : time;
 		type = type || "fx";
 
@@ -3761,12 +3761,12 @@ jQuery.fn.extend({
 			};
 		});
 	},
-	clearQueue: function( type ) {
+	clearQueue: function( type ) { // 清楚队列
 		return this.queue( type || "fx", [] );
 	},
 	// Get a promise resolved when queues of a certain type
 	// are emptied (fx is the type by default)
-	promise: function( type, obj ) {
+	promise: function( type, obj ) { // 队列结束后调用
 		var tmp,
 			count = 1,
 			defer = jQuery.Deferred(),
