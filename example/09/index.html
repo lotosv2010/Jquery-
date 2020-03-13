@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 
+            const support = $.support
+            const str = Object.keys(support).map(key => `<div>${key}: ${support[key]}</div>`)
+            $('body').append(str)
+            /*
+                Live reload enabled.
+                checkOn: true
+                optSelected: true
+                reliableMarginRight: true
+                boxSizingReliable: true
+                pixelPosition: true
+                noCloneChecked: true
+                optDisabled: true
+                radioValue: true
+                checkClone: true
+                focusinBubbles: false
+                clearCloneStyle: true
+                cors: true
+                ajax: true
+                boxSizing: true
+            */
+
+            // 2
+            var oDiv = document.getElementById('div1')
+            oDiv.onfocus = function() {
+                console.log('div focus')
+            }
+            // IE 支持 onfocusin
+            oDiv.onfocusin = function() {
+                console.log('div focusin')
+            }
+
+        })
+    </script>
+</head>
+<body>
+    <div id="div1">
+        <input type="text">
+    </div>
+</body>
+</html>

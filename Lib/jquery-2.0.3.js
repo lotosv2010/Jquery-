@@ -3182,11 +3182,11 @@ jQuery.extend({
 	}
 });
 jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
-	var input = document.createElement("input"),
-		fragment = document.createDocumentFragment(),
-		div = document.createElement("div"),
-		select = document.createElement("select"),
-		opt = select.appendChild( document.createElement("option") );
+	var input = document.createElement("input"), // 创建 input 标签
+		fragment = document.createDocumentFragment(), // 创建文档碎片
+		div = document.createElement("div"), // 创建 div 标签
+		select = document.createElement("select"), // 创建 select 标签
+		opt = select.appendChild( document.createElement("option") ); // 创建 option 标签，并添加到 select
 
 	// Finish early in limited environments
 	if ( !input.type ) {
@@ -3197,13 +3197,13 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 
 	// Support: Safari 5.1, iOS 5.1, Android 4.x, Android 2.3
 	// Check the default checkbox/radio value ("" on old WebKit; "on" elsewhere)
-	support.checkOn = input.value !== "";
+	support.checkOn = input.value !== ""; // input值，在老得webkit下为false
 
 	// Must access the parent to make an option select properly
 	// Support: IE9, IE10
-	support.optSelected = opt.selected;
+	support.optSelected = opt.selected; // 下拉菜单的子项 true表示被选中，false表示没有别选择，IE下默认第一项不选中，标准浏览器下默认第一项选中
 
-	// Will be defined later
+	// Will be defined later // 定义初始值，DOM加载完成后触发
 	support.reliableMarginRight = true;
 	support.boxSizingReliable = true;
 	support.pixelPosition = false;
@@ -3211,19 +3211,19 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 	// Make sure checked status is properly cloned
 	// Support: IE9, IE10
 	input.checked = true;
-	support.noCloneChecked = input.cloneNode( true ).checked;
+	support.noCloneChecked = input.cloneNode( true ).checked; // 克隆出来的复选框也是选中状态，IE 10一下为false
 
 	// Make sure that the options inside disabled selects aren't marked as disabled
 	// (WebKit marks them as disabled)
 	select.disabled = true;
-	support.optDisabled = !opt.disabled;
+	support.optDisabled = !opt.disabled; // 下拉框被禁止，子项的状态是否被禁止
 
 	// Check if an input maintains its value after becoming a radio
 	// Support: IE9, IE10
 	input = document.createElement("input");
 	input.value = "t";
 	input.type = "radio";
-	support.radioValue = input.value === "t";
+	support.radioValue = input.value === "t"; // 判断单选框的默认值是否为设置的 't',IE下 返回 'on'
 
 	// #11217 - WebKit loses check when the name is after the checked attribute
 	input.setAttribute( "checked", "t" );
@@ -3233,16 +3233,16 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 
 	// Support: Safari 5.1, Android 4.x, Android 2.3
 	// old WebKit doesn't clone checked state correctly in fragments
-	support.checkClone = fragment.cloneNode( true ).cloneNode( true ).lastChild.checked;
+	support.checkClone = fragment.cloneNode( true ).cloneNode( true ).lastChild.checked; // 文档碎片克隆出来的是否有值
 
 	// Support: Firefox, Chrome, Safari
 	// Beware of CSP restrictions (https://developer.mozilla.org/en/Security/CSP)
-	support.focusinBubbles = "onfocusin" in window;
+	support.focusinBubbles = "onfocusin" in window; // 是否支持 onfocusin 事件，IE支持，onfocusin 具备冒泡机制的
 
-	div.style.backgroundClip = "content-box";
-	div.cloneNode( true ).style.backgroundClip = "";
-	support.clearCloneStyle = div.style.backgroundClip === "content-box";
-
+	div.style.backgroundClip = "content-box"; // 背景剪切设置为内容剪切
+	div.cloneNode( true ).style.backgroundClip = ""; // 克隆的div背景剪切设置为空
+	support.clearCloneStyle = div.style.backgroundClip === "content-box"; // 判断克隆之前的div景剪切是否为内容剪切
+	// 下面是等待DOM加载完成在做功能检测
 	// Run tests that need a body at doc ready
 	jQuery(function() {
 		var container, marginDiv,
@@ -3267,13 +3267,13 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 		// Workaround failing boxSizing test due to offsetWidth returning wrong value
 		// with some non-1 values of body zoom, ticket #13543
 		jQuery.swap( body, body.style.zoom != null ? { zoom: 1 } : {}, function() {
-			support.boxSizing = div.offsetWidth === 4;
-		});
+			support.boxSizing = div.offsetWidth === 4; // 判断 offsetWidth 是否支持
+		});// swap css转换的方法
 
 		// Use window.getComputedStyle because jsdom on node.js will break without it.
 		if ( window.getComputedStyle ) {
-			support.pixelPosition = ( window.getComputedStyle( div, null ) || {} ).top !== "1%";
-			support.boxSizingReliable = ( window.getComputedStyle( div, null ) || { width: "4px" } ).width === "4px";
+			support.pixelPosition = ( window.getComputedStyle( div, null ) || {} ).top !== "1%"; // 像素的判断，除safari外，其他浏览器会将百分比转为像素
+			support.boxSizingReliable = ( window.getComputedStyle( div, null ) || { width: "4px" } ).width === "4px"; // 盒子的宽度除IE，其他浏览器都是非怪异模式
 
 			// Support: Android 2.3
 			// Check if div with explicit width and no margin-right incorrectly
@@ -3284,7 +3284,7 @@ jQuery.support = (function( support ) { // (3184, 3295) support: 功能检测
 			marginDiv.style.marginRight = marginDiv.style.width = "0";
 			div.style.width = "1px";
 
-			support.reliableMarginRight =
+			support.reliableMarginRight = // 检测宽度是否会影响margin-right
 				!parseFloat( ( window.getComputedStyle( marginDiv, null ) || {} ).marginRight );
 		}
 
@@ -7770,8 +7770,8 @@ if ( window.ActiveXObject ) {
 	});
 }
 
-jQuery.support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported );
-jQuery.support.ajax = xhrSupported = !!xhrSupported;
+jQuery.support.cors = !!xhrSupported && ( "withCredentials" in xhrSupported ); // 跨域
+jQuery.support.ajax = xhrSupported = !!xhrSupported; // 支持ajax
 
 jQuery.ajaxTransport(function( options ) {
 	var callback;
