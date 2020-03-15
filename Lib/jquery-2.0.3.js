@@ -3816,7 +3816,7 @@ jQuery.fn.extend({
 	},
 
 	removeProp: function( name ) {
-		return this.each(function() {
+		return this.each(function() { // jQuery.propFix 对 class和for做兼容
 			delete this[ jQuery.propFix[ name ] || name ];
 		});
 	},
@@ -3827,24 +3827,24 @@ jQuery.fn.extend({
 			len = this.length,
 			proceed = typeof value === "string" && value;
 
-		if ( jQuery.isFunction( value ) ) {
+		if ( jQuery.isFunction( value ) ) { // 回调函数的情况下
 			return this.each(function( j ) {
 				jQuery( this ).addClass( value.call( this, j, this.className ) );
 			});
 		}
 
-		if ( proceed ) {
+		if ( proceed ) { // 字符串的情况下
 			// The disjunction here is for better compressibility (see removeClass)
 			classes = ( value || "" ).match( core_rnotwhite ) || [];
 
-			for ( ; i < len; i++ ) {
+			for ( ; i < len; i++ ) { // 循环每一个元素
 				elem = this[ i ];
-				cur = elem.nodeType === 1 && ( elem.className ?
+				cur = elem.nodeType === 1 && ( elem.className ? // elem.nodeType === 1 代表是元素节点
 					( " " + elem.className + " " ).replace( rclass, " " ) :
 					" "
 				);
 
-				if ( cur ) {
+				if ( cur ) { // "" ==> false, " " ==> true
 					j = 0;
 					while ( (clazz = classes[j++]) ) {
 						if ( cur.indexOf( " " + clazz + " " ) < 0 ) {
@@ -3865,7 +3865,7 @@ jQuery.fn.extend({
 			i = 0,
 			len = this.length,
 			proceed = arguments.length === 0 || typeof value === "string" && value;
-
+			// 1 || 0 && 2 返回 1,说明先执行&&,在执行||
 		if ( jQuery.isFunction( value ) ) {
 			return this.each(function( j ) {
 				jQuery( this ).removeClass( value.call( this, j, this.className ) );
@@ -3897,7 +3897,7 @@ jQuery.fn.extend({
 
 		return this;
 	},
-
+	// stateVal， ture添加， false删除
 	toggleClass: function( value, stateVal ) {
 		var type = typeof value;
 
@@ -3927,7 +3927,7 @@ jQuery.fn.extend({
 						self.addClass( className );
 					}
 				}
-
+			// 下面判断是对应 el.toggleClass(false或true) 删除或添加已有的class
 			// Toggle whole class name
 			} else if ( type === core_strundefined || type === "boolean" ) {
 				if ( this.className ) {
@@ -3961,8 +3961,8 @@ jQuery.fn.extend({
 		var hooks, ret, isFunction,
 			elem = this[0];
 
-		if ( !arguments.length ) {
-			if ( elem ) {
+		if ( !arguments.length ) { // 获取
+			if ( elem ) { // option ,select 走jQuery.valHooks[ elem.nodeName.toLowerCase() ]，radio，checkbox走jQuery.valHooks[ elem.type ] 
 				hooks = jQuery.valHooks[ elem.type ] || jQuery.valHooks[ elem.nodeName.toLowerCase() ];
 
 				if ( hooks && "get" in hooks && (ret = hooks.get( elem, "value" )) !== undefined ) {
@@ -3981,7 +3981,7 @@ jQuery.fn.extend({
 			return;
 		}
 
-		isFunction = jQuery.isFunction( value );
+		isFunction = jQuery.isFunction( value ); // 判断val是不是函数
 
 		return this.each(function( i ) {
 			var val;
@@ -3997,11 +3997,11 @@ jQuery.fn.extend({
 			}
 
 			// Treat null/undefined as ""; convert numbers to string
-			if ( val == null ) {
+			if ( val == null ) { // val是null的情况
 				val = "";
-			} else if ( typeof val === "number" ) {
+			} else if ( typeof val === "number" ) { // val是数值的情况
 				val += "";
-			} else if ( jQuery.isArray( val ) ) {
+			} else if ( jQuery.isArray( val ) ) { // val是数组的情况
 				val = jQuery.map(val, function ( value ) {
 					return value == null ? "" : value + "";
 				});
@@ -4019,7 +4019,7 @@ jQuery.fn.extend({
 
 jQuery.extend({
 	valHooks: {
-		option: {
+		option: { // 下拉菜单子选项兼容处理
 			get: function( elem ) {
 				// attributes.value is undefined in Blackberry 4.7 but
 				// uses .value. See #6932
@@ -4027,7 +4027,7 @@ jQuery.extend({
 				return !val || val.specified ? elem.value : elem.text;
 			}
 		},
-		select: {
+		select: { // 下拉菜单兼容处理
 			get: function( elem ) {
 				var value, option,
 					options = elem.options,
@@ -4064,7 +4064,7 @@ jQuery.extend({
 
 				return values;
 			},
-
+			// select 的set情况
 			set: function( elem, value ) {
 				var optionSet, option,
 					options = elem.options,
@@ -4089,7 +4089,7 @@ jQuery.extend({
 
 	attr: function( elem, name, value ) {
 		var hooks, ret,
-			nType = elem.nodeType;
+			nType = elem.nodeType; // 获取节点类型
 
 		// don't get/set attributes on text, comment and attribute nodes
 		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
@@ -4097,21 +4097,21 @@ jQuery.extend({
 		}
 
 		// Fallback to prop when attributes are not supported
-		if ( typeof elem.getAttribute === core_strundefined ) {
+		if ( typeof elem.getAttribute === core_strundefined ) { // 元素不支持attributes
 			return jQuery.prop( elem, name, value );
 		}
 
 		// All attributes are lowercase
 		// Grab necessary hook if one is defined
-		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
+		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) { // isXMLDoc 判断节点是否XML节点
 			name = name.toLowerCase();
-			hooks = jQuery.attrHooks[ name ] ||
+			hooks = jQuery.attrHooks[ name ] || // type是 radio 时做处理
 				( jQuery.expr.match.bool.test( name ) ? boolHook : nodeHook );
-		}
+		} // nodeHook === undefined
 
 		if ( value !== undefined ) {
 
-			if ( value === null ) {
+			if ( value === null ) { // 第二个参数为 null 时，删除此属性
 				jQuery.removeAttr( elem, name );
 
 			} else if ( hooks && "set" in hooks && (ret = hooks.set( elem, value, name )) !== undefined ) {
@@ -4126,7 +4126,7 @@ jQuery.extend({
 			return ret;
 
 		} else {
-			ret = jQuery.find.attr( elem, name );
+			ret = jQuery.find.attr( elem, name ); // jQuery.find ==> Sizzle，Sizzle.attr ==> getAttribute
 
 			// Non-existent attributes return null, we normalize to undefined
 			return ret == null ?
@@ -4139,7 +4139,9 @@ jQuery.extend({
 		var name, propName,
 			i = 0,
 			attrNames = value && value.match( core_rnotwhite );
-
+		// attrNames 是数组的原因：
+		// removeAttr支持删除多个属性，如下
+		// $('#div1').removeAttr('robin href id')
 		if ( attrNames && elem.nodeType === 1 ) {
 			while ( (name = attrNames[i++]) ) {
 				propName = jQuery.propFix[ name ] || name;
@@ -4162,9 +4164,9 @@ jQuery.extend({
 					// Setting the type on a radio button after the value resets the value in IE6-9
 					// Reset value to default in case type is set after value during creation
 					var val = elem.value;
-					elem.setAttribute( "type", value );
+					elem.setAttribute( "type", value ); // 先设置类型
 					if ( val ) {
-						elem.value = val;
+						elem.value = val; // 然后赋值
 					}
 					return value;
 				}
@@ -4208,7 +4210,7 @@ jQuery.extend({
 
 	propHooks: {
 		tabIndex: {
-			get: function( elem ) {
+			get: function( elem ) { // 针对 tabindex（光标切换）的兼容性问题 
 				return elem.hasAttribute( "tabindex" ) || rfocusable.test( elem.nodeName ) || elem.href ?
 					elem.tabIndex :
 					-1;
@@ -4223,7 +4225,7 @@ boolHook = {
 		if ( value === false ) {
 			// Remove boolean attributes when set to false
 			jQuery.removeAttr( elem, name );
-		} else {
+		} else { // 兼容如下设置： el.attr('checked', true)
 			elem.setAttribute( name, name );
 		}
 		return name;
@@ -4253,12 +4255,12 @@ jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( i, name ) 
 
 // Support: IE9+
 // Selectedness for an option in an optgroup can be inaccurate
-if ( !jQuery.support.optSelected ) {
+if ( !jQuery.support.optSelected ) { // optSelected代表下拉菜单的option 选中状态
 	jQuery.propHooks.selected = {
 		get: function( elem ) {
-			var parent = elem.parentNode;
+			var parent = elem.parentNode; // parent ==> optgroup
 			if ( parent && parent.parentNode ) {
-				parent.parentNode.selectedIndex;
+				parent.parentNode.selectedIndex; // parentNode ==>  select
 			}
 			return null;
 		}
@@ -4276,13 +4278,13 @@ jQuery.each([
 	"useMap",
 	"frameBorder",
 	"contentEditable"
-], function() {
+], function() { // 给propFix添加属性，如下：jQuery.propFix[tableindex] = tabIndex
 	jQuery.propFix[ this.toLowerCase() ] = this;
 });
 
 // Radios and checkboxes getter/setter
 jQuery.each([ "radio", "checkbox" ], function() {
-	jQuery.valHooks[ this ] = {
+	jQuery.valHooks[ this ] = { // "radio", "checkbox" 兼容处理
 		set: function( elem, value ) {
 			if ( jQuery.isArray( value ) ) {
 				return ( elem.checked = jQuery.inArray( jQuery(elem).val(), value ) >= 0 );
@@ -4290,7 +4292,7 @@ jQuery.each([ "radio", "checkbox" ], function() {
 		}
 	};
 	if ( !jQuery.support.checkOn ) {
-		jQuery.valHooks[ this ].get = function( elem ) {
+		jQuery.valHooks[ this ].get = function( elem ) { // 针对老版本的单选复选返回值默认为空的情况，做兼容
 			// Support: Webkit
 			// "" is returned instead of "on" if a value isn't specified
 			return elem.getAttribute("value") === null ? "on" : elem.value;

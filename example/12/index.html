@@ -11,7 +11,7 @@
             width: 100px;
             height: 100px;
             background-color: brown;
-            position: absolute;
+            /* position: absolute; */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -20,11 +20,72 @@
     <script>
         $(function() {
             // =====================================================================
-            // 1 
+            // 1 attr 添加属性
+            
+            $('#div1').attr('title', 'hello attr')
+            console.log($('#div1').attr('id'))
+            $('#div1').attr('robin', 'hello robin') // 设置自定义属性，在标签上体现
+            console.log($('#div1').attr('robin'))
+
+            // =====================================================================
+            // 2 prop 添加属性
+            $('#div1').prop('title', 'hello prop')
+            console.log($('#div1').prop('id'))
+            $('#div1').prop('age', 'hello age') // 设置自定义属性，不在标签上体现
+            console.log($('#div1').prop('age'))
+
+            // =====================================================================
+            // 3 removeAttr 删除属性
+            $('#div1').removeAttr('robin')
+            // 删除多个属性
+            // $('#div1').removeAttr('robin href id')
+            console.log($('#div1').attr('robin'))
+
+            // =====================================================================
+            // 4 removeProp 删除属性
+            $('#div1').removeProp('age')
+            console.log($('#div1').prop('age'))
+
+            // =====================================================================
+            // 5 原生
+            var oDiv = document.getElementById('div1')
+            // 方式一 ===> attr
+            // oDiv.setAttribute('title', 'hello setAttribute')
+            // 方式二 ====> prop
+            // oDiv.title = 'hello .title'
+            // 方式三 ====> prop
+            // oDiv['title'] = 'hello [title]'
+
+             // =====================================================================
+            // 6 addClass
+            // $('#div1').addClass('box3')
+            $('#div1').addClass('box3 box4')
+
+             // =====================================================================
+            // 7 removeClass
+            // $('#div1').removeClass() // 情况class
+            // $('#div1').removeClass('box2')
+            $('#div1').removeClass('box3 box4')
+
+             // =====================================================================
+            // 8 toggleClass
+            $('#div1').toggleClass('box5')
+
+             // =====================================================================
+            // 9 hasClass
+            console.log($('#div1').hasClass('box1'))
+            // console.log($('#div1').hasClass('box1 box2'))
+            console.log($('#div1').hasClass('box6'))
+
+            // =====================================================================
+            // 9 val
+            console.log($('#input1').val())
+            $("#input1").val('hello jquery')
         })
     </script>
 </head>
 <body>
-    <div id="div1">div1</div>
+    <div id="div1" class="box1 box2">div1</div>
+    <input id="input1" type="text" value="hello val">
 </body>
 </html>
