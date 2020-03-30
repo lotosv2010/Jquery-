@@ -18,3 +18,9 @@
 >> **[11 (3653, 3797) queue()/dequeue() 队列管理](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/11-(3653%2C%203797)%20queue()%26dequeue()%20%E9%98%9F%E5%88%97%E7%AE%A1%E7%90%86.md)**  
 >> **[12 (3803, 4299) attr()/prop()/val()/addClass() 对元素属性的操作](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/12-(3803%2C%204299)%20attr()%26prop()%26val()%26addClass()%20%E5%AF%B9%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
 >> **[13 (4300, 5128) on()/trigger() 事件操作的相关方法](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/13-(4300%2C%205128)%20on()%26trigger()%E4%BA%8B%E4%BB%B6%E6%93%8D%E4%BD%9C%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95.md)**  
+>> **[14 (5140, 6057) DOM操作的相关方法](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/14-(5140%2C%206057)%20DOM%E6%93%8D%E4%BD%9C%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95.md)**  
+>> **[15 (6058, 6620) css样式的操作](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/15-(6058%2C%206620)%20css%E6%A0%B7%E5%BC%8F%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
+>> **[16 (6621, 7854) 提交的数据和ajax](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/15-(6058%2C%206620)%20css%E6%A0%B7%E5%BC%8F%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
+>> **[17 (7855, 8584) animate运动的方法](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/15-(6058%2C%206620)%20css%E6%A0%B7%E5%BC%8F%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
+>> **[18 (8585, 8792) offset位置与尺寸的相关方法](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/15-(6058%2C%206620)%20css%E6%A0%B7%E5%BC%8F%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
+>> **[19 (8804, 8821) JQ支持模块化的模式](https://github.com/lotosv2010/Jquery-SourceCode-Analysis/blob/master/doc/Markdown/15-(6058%2C%206620)%20css%E6%A0%B7%E5%BC%8F%E7%9A%84%E6%93%8D%E4%BD%9C.md)**  
