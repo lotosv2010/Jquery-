@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 源码分析</title>
+    <script src="../../Lib/jquery-2.0.3.js"></script>
+    <style>
+        div {
+            height: 100px;
+            /* background-color: brown; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script>
+        $(function() {
+            // =====================================================================
+            // 1 has
+            $('div').has('.box').css('border', '5px green solid')
+             // =====================================================================
+            // 2 not
+            $('div').not('.box').css('border', '5px yellow solid')
+            // =====================================================================
+            // 3 filter
+            // $('div').filter('.box').css('border', '5px red solid')
+
+            // $('div').filter(function(i, elem) {
+            //     return elem.className === 'box'
+            // }).css('border', '5px red solid')
+
+            const oBox = document.querySelector('.box')
+            $('div').filter(oBox).css('border', '5px red solid')
+
+            // =====================================================================
+            // 4 find
+            $('ul').find('li').css('background', 'red')
+            // =====================================================================
+            // 5 is
+            console.log($('div').is('.box'))
+            // =====================================================================
+            // 6 index
+            console.log($('#div3').index())
+            console.log($('#span1').index())
+            console.log($('#span1').index('span'))
+            console.log($('span').index($('#span1')))
+            // =====================================================================
+            // 7 closest
+            // $('#div4').closest('.bd').css('border', '5px red solid')
+            $('#div4').closest('.bd', $('body').get(0)).css('border', '5px red solid')
+            // =====================================================================
+            // 8 add
+            $('#p1').add('#span2').css('color', 'green')
+            // =====================================================================
+            // 9 addBack
+            $('#p2').find('span').css('color', 'red').addBack().css('fontSize', '24px')
+            // =====================================================================
+            // 10 parent
+            // $('#span3').parent().css('color', 'pink')
+            // =====================================================================
+            // 11 parents
+            // $('#span3').parents().css('color', 'pink')
+            // =====================================================================
+            // 12 parentsUntil
+            $('#span3').parentsUntil('body', 'div').css('color', 'pink')
+            // =====================================================================
+            // 13 remove
+            // $('#div5').remove()
+            // =====================================================================
+            // 14 detach
+            // $('#div5').detach()
+            // =====================================================================
+            // 15 detach
+            // $('#div5').empty()
+            // =====================================================================
+            // 16 text
+            console.log($('#div5').text())
+            // =====================================================================
+            // 17 clone
+            // $('body').append(($('#div5').clone()))
+            // =====================================================================
+            // 18 appendTo
+            $('<div>div appendTo</div>').appendTo('body')
+            // =====================================================================
+            // 19 wrapAll
+            // $('span').wrapAll('<div>')
+            // =====================================================================
+            // 20 wrap
+            $('#span4').wrap('<div>')
+            // =====================================================================
+            // 20 wrapInner
+            $('#span4').wrapInner('<div>')
+        })
+    </script>
+</head>
+<body class="bd">
+    <div id="div1" class="box">div1 <span>span</span></div>
+    <div>div2</div>
+    <div id="div3">div3 <span class="box" id="span1">span</span></div>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <ol>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ol>
+    <div id="div4" class="bd">aaaa <div id="div4-1" class="bd">bbbb</div></div>
+    <p id="p1">p1</p>
+    <span id="span2">span2</span>
+    <div id="div6"> div6 <p id="p2">p2 <span id="span3">span3</span></p></div>
+    <div id="div5"><span>span</span></div>
+    <div id="div6"></div>
+    <span id="span4">span4</span>
+</body>
+</html>

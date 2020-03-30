@@ -5159,15 +5159,15 @@ jQuery.fn.extend({
 		}
 
 		// Needed because $( selector, context ) becomes $( context ).find( selector )
-		ret = this.pushStack( len > 1 ? jQuery.unique( ret ) : ret );
+		ret = this.pushStack( len > 1 ? jQuery.unique( ret ) : ret ); // 入栈操作，jQuery.unique去重
 		ret.selector = this.selector ? this.selector + " " + selector : selector;
 		return ret;
 	},
-
+	// 例如：$('div').has('.box').css('border', '5px green solid')
 	has: function( target ) {
 		var targets = jQuery( target, this ),
 			l = targets.length;
-
+		// target：'.box' ，this： div
 		return this.filter(function() {
 			var i = 0;
 			for ( ; i < l; i++ ) {
@@ -5178,7 +5178,7 @@ jQuery.fn.extend({
 		});
 	},
 
-	not: function( selector ) {
+	not: function( selector ) { // pushStack 入栈的内部方法
 		return this.pushStack( winnow(this, selector || [], true) );
 	},
 
@@ -5193,7 +5193,7 @@ jQuery.fn.extend({
 			// If this is a positional/relative selector, check membership in the returned set
 			// so $("p:first").is("p:last") won't return true for a doc with two "p".
 			typeof selector === "string" && rneedsContext.test( selector ) ?
-				jQuery( selector ) :
+				jQuery( selector ) : // 有伪类
 				selector || [],
 			false
 		).length;
@@ -5232,7 +5232,7 @@ jQuery.fn.extend({
 	index: function( elem ) {
 
 		// No argument, return index in parent
-		if ( !elem ) {
+		if ( !elem ) { // 没有参数
 			return ( this[ 0 ] && this[ 0 ].parentNode ) ? this.first().prevAll().length : -1;
 		}
 
@@ -5248,12 +5248,12 @@ jQuery.fn.extend({
 			elem.jquery ? elem[ 0 ] : elem
 		);
 	},
-
+	// context 上下文(作用范围)
 	add: function( selector, context ) {
 		var set = typeof selector === "string" ?
 				jQuery( selector, context ) :
 				jQuery.makeArray( selector && selector.nodeType ? [ selector ] : selector ),
-			all = jQuery.merge( this.get(), set );
+			all = jQuery.merge( this.get(), set ); // 合成一个集合
 
 		return this.pushStack( jQuery.unique(all) );
 	},
@@ -5306,14 +5306,14 @@ jQuery.each({
 	children: function( elem ) {
 		return jQuery.sibling( elem.firstChild );
 	},
-	contents: function( elem ) {
+	contents: function( elem ) { // contentDocument 跨 iframe 操作的方法
 		return elem.contentDocument || jQuery.merge( [], elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
-		var matched = jQuery.map( this, fn, until );
+		var matched = jQuery.map( this, fn, until ); // until参数
 
-		if ( name.slice( -5 ) !== "Until" ) {
+		if ( name.slice( -5 ) !== "Until" ) { // 例如 parentsUntil
 			selector = until;
 		}
 
@@ -5321,9 +5321,9 @@ jQuery.each({
 			matched = jQuery.filter( selector, matched );
 		}
 
-		if ( this.length > 1 ) {
+		if ( this.length > 1 ) { // 多个元素的时候
 			// Remove duplicates
-			if ( !guaranteedUnique[ name ] ) {
+			if ( !guaranteedUnique[ name ] ) { // guaranteedUnique里面的四种情况是不存在重复的情况
 				jQuery.unique( matched );
 			}
 
@@ -5341,24 +5341,24 @@ jQuery.extend({
 	filter: function( expr, elems, not ) {
 		var elem = elems[ 0 ];
 
-		if ( not ) {
+		if ( not ) { // not 执行的逻辑
 			expr = ":not(" + expr + ")";
 		}
-
+		// jQuery.find ===> Sizzle ，matchesSelector 1个元素帅选，matches 多个元素帅选
 		return elems.length === 1 && elem.nodeType === 1 ?
 			jQuery.find.matchesSelector( elem, expr ) ? [ elem ] : [] :
 			jQuery.find.matches( expr, jQuery.grep( elems, function( elem ) {
 				return elem.nodeType === 1;
 			}));
 	},
-
+	// elem 当前要操作的每一个元素, dir 决定操作父级还是兄弟节点, until 截止到什么位置结束
 	dir: function( elem, dir, until ) {
 		var matched = [],
 			truncate = until !== undefined;
-
+		// html 的父级是 document
 		while ( (elem = elem[ dir ]) && elem.nodeType !== 9 ) {
-			if ( elem.nodeType === 1 ) {
-				if ( truncate && jQuery( elem ).is( until ) ) {
+			if ( elem.nodeType === 1 ) { // 元素节点
+				if ( truncate && jQuery( elem ).is( until ) ) { // 针对截止操作
 					break;
 				}
 				matched.push( elem );
@@ -5381,7 +5381,7 @@ jQuery.extend({
 });
 
 // Implement the identical functionality for filter and not
-function winnow( elements, qualifier, not ) {
+function winnow( elements, qualifier, not ) { // elements元素，qualifier帅选条件
 	if ( jQuery.isFunction( qualifier ) ) {
 		return jQuery.grep( elements, function( elem, i ) {
 			/* jshint -W018 */
@@ -5398,10 +5398,10 @@ function winnow( elements, qualifier, not ) {
 	}
 
 	if ( typeof qualifier === "string" ) {
-		if ( isSimple.test( qualifier ) ) {
+		if ( isSimple.test( qualifier ) ) { // isSimple正则，匹配成功：.box、div、#div1、:odd `ul li`
 			return jQuery.filter( qualifier, elements, not );
 		}
-
+		// isSimple正则，匹配不成功：`div:odd`、`ul#li`、`ul[title="hello"]`、`div.box`、`ul,ol` 
 		qualifier = jQuery.filter( qualifier, elements );
 	}
 
@@ -5444,8 +5444,8 @@ jQuery.fn.extend({
 	text: function( value ) {
 		return jQuery.access( this, function( value ) {
 			return value === undefined ?
-				jQuery.text( this ) :
-				this.empty().append( ( this[ 0 ] && this[ 0 ].ownerDocument || document ).createTextNode( value ) );
+				jQuery.text( this ) : // 获取
+				this.empty().append( ( this[ 0 ] && this[ 0 ].ownerDocument || document ).createTextNode( value ) ); // 设置
 		}, null, value, arguments.length );
 	},
 
@@ -5491,7 +5491,7 @@ jQuery.fn.extend({
 
 		for ( ; (elem = elems[i]) != null; i++ ) {
 			if ( !keepData && elem.nodeType === 1 ) {
-				jQuery.cleanData( getAll( elem ) );
+				jQuery.cleanData( getAll( elem ) ); // 删除相关的数据
 			}
 
 			if ( elem.parentNode ) {
@@ -5532,20 +5532,20 @@ jQuery.fn.extend({
 		});
 	},
 
-	html: function( value ) {
+	html: function( value ) { // access 多功能值操作
 		return jQuery.access( this, function( value ) {
 			var elem = this[ 0 ] || {},
 				i = 0,
 				l = this.length;
 
 			if ( value === undefined && elem.nodeType === 1 ) {
-				return elem.innerHTML;
+				return elem.innerHTML; // 获取
 			}
-
+			// rnoInnerhtml = /<(?:script|style|link)/i，判断是否包含这三类标签
 			// See if we can take a shortcut and just use innerHTML
 			if ( typeof value === "string" && !rnoInnerhtml.test( value ) &&
 				!wrapMap[ ( rtagName.exec( value ) || [ "", "" ] )[ 1 ].toLowerCase() ] ) {
-
+				// wrapMap： 针对 XHTML 处理， rxhtmlTag：针对但标签的元素
 				value = value.replace( rxhtmlTag, "<$1></$2>" );
 
 				try {
@@ -5565,7 +5565,7 @@ jQuery.fn.extend({
 				} catch( e ) {}
 			}
 
-			if ( elem ) {
+			if ( elem ) { // value 包含 script|style|link 这三类标签时走这里
 				this.empty().append( value );
 			}
 		}, null, value, arguments.length );
@@ -5602,7 +5602,7 @@ jQuery.fn.extend({
 	detach: function( selector ) {
 		return this.remove( selector, true );
 	},
-
+	// args：参数对象, callback：回调函数, allowIntersection
 	domManip: function( args, callback, allowIntersection ) {
 
 		// Flatten any nested arrays
@@ -5615,7 +5615,7 @@ jQuery.fn.extend({
 			iNoClone = l - 1,
 			value = args[ 0 ],
 			isFunction = jQuery.isFunction( value );
-
+		// 处理第一个参数是回调函数的情况
 		// We can't cloneNode fragments that contain checked, in WebKit
 		if ( isFunction || !( l <= 1 || typeof value !== "string" || jQuery.support.checkClone || !rchecked.test( value ) ) ) {
 			return this.each(function( index ) {
@@ -5627,7 +5627,7 @@ jQuery.fn.extend({
 			});
 		}
 
-		if ( l ) {
+		if ( l ) { // 文档碎片的创建
 			fragment = jQuery.buildFragment( args, this[ 0 ].ownerDocument, false, !allowIntersection && this );
 			first = fragment.firstChild;
 
@@ -5635,15 +5635,15 @@ jQuery.fn.extend({
 				fragment = first;
 			}
 
-			if ( first ) {
-				scripts = jQuery.map( getAll( fragment, "script" ), disableScript );
+			if ( first ) { // script标签的处理
+				scripts = jQuery.map( getAll( fragment, "script" ), disableScript ); // 阻止执行
 				hasScripts = scripts.length;
 
 				// Use the original fragment for the last item instead of the first because it can end up
 				// being emptied incorrectly in certain situations (#8070).
 				for ( ; i < l; i++ ) {
 					node = fragment;
-
+					// 除了第一个其他的都是clone来产生
 					if ( i !== iNoClone ) {
 						node = jQuery.clone( node, true, true );
 
@@ -5655,10 +5655,10 @@ jQuery.fn.extend({
 						}
 					}
 
-					callback.call( this[ i ], node, i );
+					callback.call( this[ i ], node, i ); // 回调处理
 				}
 
-				if ( hasScripts ) {
+				if ( hasScripts ) { // 触发script
 					doc = scripts[ scripts.length - 1 ].ownerDocument;
 
 					// Reenable scripts
@@ -5686,7 +5686,7 @@ jQuery.fn.extend({
 	}
 });
 
-jQuery.each({
+jQuery.each({ // 两个方法的区别主要是针对的对象不一样，及this
 	appendTo: "append",
 	prependTo: "prepend",
 	insertBefore: "before",
@@ -5716,7 +5716,7 @@ jQuery.each({
 jQuery.extend({
 	clone: function( elem, dataAndEvents, deepDataAndEvents ) {
 		var i, l, srcElements, destElements,
-			clone = elem.cloneNode( true ),
+			clone = elem.cloneNode( true ), // 原生的克隆，只是复制html没有复制数据和事件
 			inPage = jQuery.contains( elem.ownerDocument, elem );
 
 		// Support: IE >= 9
@@ -5724,11 +5724,11 @@ jQuery.extend({
 		if ( !jQuery.support.noCloneChecked && ( elem.nodeType === 1 || elem.nodeType === 11 ) && !jQuery.isXMLDoc( elem ) ) {
 
 			// We eschew Sizzle here for performance reasons: http://jsperf.com/getall-vs-sizzle/2
-			destElements = getAll( clone );
-			srcElements = getAll( elem );
+			destElements = getAll( clone ); // 克隆的元素
+			srcElements = getAll( elem ); // 当前的元素
 
 			for ( i = 0, l = srcElements.length; i < l; i++ ) {
-				fixInput( srcElements[ i ], destElements[ i ] );
+				fixInput( srcElements[ i ], destElements[ i ] ); // 解决复选框单选框选中时被克隆的元素没有选中的问题
 			}
 		}
 
@@ -5745,7 +5745,7 @@ jQuery.extend({
 				cloneCopyEvent( elem, clone );
 			}
 		}
-
+		// 把 script 标签设置为全局的
 		// Preserve script evaluation history
 		destElements = getAll( clone, "script" );
 		if ( destElements.length > 0 ) {
@@ -5760,7 +5760,7 @@ jQuery.extend({
 		var elem, tmp, tag, wrap, contains, j,
 			i = 0,
 			l = elems.length,
-			fragment = context.createDocumentFragment(),
+			fragment = context.createDocumentFragment(), // 原生的文档碎片的创建
 			nodes = [];
 
 		for ( ; i < l; i++ ) {
@@ -5769,26 +5769,26 @@ jQuery.extend({
 			if ( elem || elem === 0 ) {
 
 				// Add nodes directly
-				if ( jQuery.type( elem ) === "object" ) {
+				if ( jQuery.type( elem ) === "object" ) { // 针对 $('div').append(oDiv) 或 $('div').append($('div'))
 					// Support: QtWebKit
 					// jQuery.merge because core_push.apply(_, arraylike) throws
 					jQuery.merge( nodes, elem.nodeType ? [ elem ] : elem );
 
 				// Convert non-html into a text node
-				} else if ( !rhtml.test( elem ) ) {
+				} else if ( !rhtml.test( elem ) ) { // 针对纯字符串的情况，例如 $('div').append('hello')
 					nodes.push( context.createTextNode( elem ) );
 
 				// Convert html into DOM nodes
-				} else {
+				} else { // 针对字符串标签的情况，例如 $('div').append('<div>div</div>')
 					tmp = tmp || fragment.appendChild( context.createElement("div") );
 
 					// Deserialize a standard representation
 					tag = ( rtagName.exec( elem ) || ["", ""] )[ 1 ].toLowerCase();
-					wrap = wrapMap[ tag ] || wrapMap._default;
+					wrap = wrapMap[ tag ] || wrapMap._default; // wrapMap 特殊标签的处理，例如 tr
 					tmp.innerHTML = wrap[ 1 ] + elem.replace( rxhtmlTag, "<$1></$2>" ) + wrap[ 2 ];
 
 					// Descend through wrappers to the right content
-					j = wrap[ 0 ];
+					j = wrap[ 0 ]; // wrap[ 0 ]表示层级
 					while ( j-- ) {
 						tmp = tmp.lastChild;
 					}
@@ -5815,7 +5815,7 @@ jQuery.extend({
 
 			// #4087 - If origin and destination elements are the same, and this is
 			// that element, do not do anything
-			if ( selection && jQuery.inArray( elem, selection ) !== -1 ) {
+			if ( selection && jQuery.inArray( elem, selection ) !== -1 ) { // 针对 domManip 第三个参数 allowIntersection
 				continue;
 			}
 
@@ -5854,7 +5854,7 @@ jQuery.extend({
 
 				if ( key && (data = data_priv.cache[ key ]) ) {
 					events = Object.keys( data.events || {} );
-					if ( events.length ) {
+					if ( events.length ) { // 删除事件的操作
 						for ( j = 0; (type = events[j]) !== undefined; j++ ) {
 							if ( special[ type ] ) {
 								jQuery.event.remove( elem, type );
@@ -5865,7 +5865,7 @@ jQuery.extend({
 							}
 						}
 					}
-					if ( data_priv.cache[ key ] ) {
+					if ( data_priv.cache[ key ] ) { // 删除缓存的操作
 						// Discard any remaining `private` data
 						delete data_priv.cache[ key ];
 					}
@@ -5875,7 +5875,7 @@ jQuery.extend({
 			delete data_user.cache[ elem[ data_user.expando ] ];
 		}
 	},
-
+	// 调用ajax获取script文件
 	_evalUrl: function( url ) {
 		return jQuery.ajax({
 			url: url,
@@ -5900,11 +5900,11 @@ function manipulationTarget( elem, content ) {
 }
 
 // Replace/restore the type attribute of script elements for safe DOM manipulation
-function disableScript( elem ) {
+function disableScript( elem ) { // 给script添加type属性，是属性不匹配来阻止，script执行
 	elem.type = (elem.getAttribute("type") !== null) + "/" + elem.type;
 	return elem;
 }
-function restoreScript( elem ) {
+function restoreScript( elem ) { // 恢复阻止script执行
 	var match = rscriptTypeMasked.exec( elem.type );
 
 	if ( match ) {
@@ -5986,7 +5986,7 @@ function fixInput( src, dest ) {
 		dest.defaultValue = src.defaultValue;
 	}
 }
-jQuery.fn.extend({
+jQuery.fn.extend({ // 包装元素
 	wrapAll: function( html ) {
 		var wrap;
 
@@ -6018,7 +6018,7 @@ jQuery.fn.extend({
 
 		return this;
 	},
-
+	// 内部包装
 	wrapInner: function( html ) {
 		if ( jQuery.isFunction( html ) ) {
 			return this.each(function( i ) {
@@ -6046,7 +6046,7 @@ jQuery.fn.extend({
 			jQuery( this ).wrapAll( isFunction ? html.call(this, i) : html );
 		});
 	},
-
+	// 删除制定元素的父级
 	unwrap: function() {
 		return this.parent().each(function() {
 			if ( !jQuery.nodeName( this, "body" ) ) {
