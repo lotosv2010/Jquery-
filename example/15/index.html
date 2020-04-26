@@ -9,23 +9,51 @@
     <style>
         div {
             height: 100px;
+            width: 100px;
             /* background-color: brown; */
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 10px;
+            padding: 10px
         }
     </style>
     <script>
         $(function() {
             // =====================================================================
-            // 1 has
-            // $('div').has('.box').css('border', '5px green solid')
-            
+            // 1 css
+            $('div').css('border', '5px green solid')
+            console.log($('div').css('border'))
+            console.log($('div').css(['border', 'height', 'margin']))
+            // $('div').css('width', '+=100')
+            // =====================================================================
+            // 2 show
+            // $('div').show()
+            // =====================================================================
+            // 3 hide
+            // $('div').hide()
+            // =====================================================================
+            // 4 toggle
+            document.onclick = function() {
+                $('div').toggle()
+            }
+            // =====================================================================
+            // 5 cssHooks
+            console.log($('div').css('opacity'))
+            // =====================================================================
+            // 6 width
+            console.log($('div').width())
+            // =====================================================================
+            // 7 innerWidth
+            console.log($('div').innerWidth())
+            // =====================================================================
+            // 8 outerWidth
+            console.log($('div').outerWidth())
+            console.log($('div').outerWidth(true)) // 加上margin的值
         })
     </script>
 </head>
 <body class="bd">
     <div id="div1" class="box">div1 <span>span</span></div>
-    <div>div2</div>
 </body>
 </html>

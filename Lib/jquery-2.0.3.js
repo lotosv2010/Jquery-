@@ -6075,7 +6075,7 @@ var curCSS, iframe,
 	cssPrefixes = [ "Webkit", "O", "Moz", "ms" ];
 
 // return a css property mapped to a potentially vendor prefixed property
-function vendorPropName( style, name ) {
+function vendorPropName( style, name ) { // 添加浏览器前缀
 
 	// shortcut for names that are not vendor prefixed
 	if ( name in style ) {
@@ -6095,13 +6095,13 @@ function vendorPropName( style, name ) {
 	}
 
 	return origName;
-}
-
+} 
+// el 针对 filter
 function isHidden( elem, el ) {
 	// isHidden might be called from jQuery#filter function;
 	// in that case, element will be second argument
 	elem = el || elem;
-	return jQuery.css( elem, "display" ) === "none" || !jQuery.contains( elem.ownerDocument, elem );
+	return jQuery.css( elem, "display" ) === "none" || !jQuery.contains( elem.ownerDocument, elem ); // !jQuery.contains( elem.ownerDocument, elem )针对创建元素，默认创建元素是看不见隐藏的
 }
 
 // NOTE: we've included the "window" in window.getComputedStyle
@@ -6109,7 +6109,7 @@ function isHidden( elem, el ) {
 function getStyles( elem ) {
 	return window.getComputedStyle( elem, null );
 }
-
+// show: true 显示， false 隐藏
 function showHide( elements, show ) {
 	var display, elem, hidden,
 		values = [],
@@ -6135,13 +6135,13 @@ function showHide( elements, show ) {
 			// in a stylesheet to whatever the default browser style is
 			// for such an element
 			if ( elem.style.display === "" && isHidden( elem ) ) {
-				values[ index ] = data_priv.access( elem, "olddisplay", css_defaultDisplay(elem.nodeName) );
+				values[ index ] = data_priv.access( elem, "olddisplay", css_defaultDisplay(elem.nodeName) ); // css_defaultDisplay动态获取隐藏元素默认的display的值
 			}
 		} else {
 
 			if ( !values[ index ] ) {
 				hidden = isHidden( elem );
-
+				// jQuery.css(elem, "display") 获取默认的display属性的值
 				if ( display && display !== "none" || !hidden ) {
 					data_priv.set( elem, "olddisplay", hidden ? display : jQuery.css(elem, "display") );
 				}
@@ -6153,7 +6153,7 @@ function showHide( elements, show ) {
 	// to avoid the constant reflow
 	for ( index = 0; index < length; index++ ) {
 		elem = elements[ index ];
-		if ( !elem.style ) {
+		if ( !elem.style ) { // 文本节点/属性节点/注释节点 跳出
 			continue;
 		}
 		if ( !show || elem.style.display === "none" || elem.style.display === "" ) {
@@ -6171,7 +6171,7 @@ jQuery.fn.extend({
 				map = {},
 				i = 0;
 
-			if ( jQuery.isArray( name ) ) {
+			if ( jQuery.isArray( name ) ) { // 数组的情况
 				styles = getStyles( elem );
 				len = name.length;
 
@@ -6183,8 +6183,8 @@ jQuery.fn.extend({
 			}
 
 			return value !== undefined ?
-				jQuery.style( elem, name, value ) :
-				jQuery.css( elem, name );
+				jQuery.style( elem, name, value ) : // 设置
+				jQuery.css( elem, name ); // 获取
 		}, name, value, arguments.length > 1 );
 	},
 	show: function() {
@@ -6245,7 +6245,7 @@ jQuery.extend({
 	},
 
 	// Get and set the style property on a DOM Node
-	style: function( elem, name, value, extra ) {
+	style: function( elem, name, value, extra ) { // extra 针对尺寸方法
 		// Don't set styles on text and comment nodes
 		if ( !elem || elem.nodeType === 3 || elem.nodeType === 8 || !elem.style ) {
 			return;
@@ -6263,12 +6263,12 @@ jQuery.extend({
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
 
 		// Check if we're setting a value
-		if ( value !== undefined ) {
+		if ( value !== undefined ) { // 设置
 			type = typeof value;
 
 			// convert relative number strings (+= or -=) to relative numbers. #7345
 			if ( type === "string" && (ret = rrelNum.exec( value )) ) {
-				value = ( ret[1] + 1 ) * ret[2] + parseFloat( jQuery.css( elem, name ) );
+				value = ( ret[1] + 1 ) * ret[2] + parseFloat( jQuery.css( elem, name ) ); // ret[1] ==> +/-, ret[2] ==> 数值例如100
 				// Fixes bug #9237
 				type = "number";
 			}
@@ -6282,7 +6282,7 @@ jQuery.extend({
 			if ( type === "number" && !jQuery.cssNumber[ origName ] ) {
 				value += "px";
 			}
-
+			// 功能检测，防止样式修改互相影响
 			// Fixes #8908, it can be done more correctly by specifying setters in cssHooks,
 			// but it would mean to define eight (for every problematic property) identical functions
 			if ( !jQuery.support.clearCloneStyle && value === "" && name.indexOf("background") === 0 ) {
@@ -6290,11 +6290,11 @@ jQuery.extend({
 			}
 
 			// If a hook was provided, use that value, otherwise just set the specified value
-			if ( !hooks || !("set" in hooks) || (value = hooks.set( elem, value, extra )) !== undefined ) {
-				style[ name ] = value;
+			if ( !hooks || !("set" in hooks) || (value = hooks.set( elem, value, extra )) !== undefined ) { // 处理宽高
+				style[ name ] = value; // 设置
 			}
 
-		} else {
+		} else { // 获取
 			// If a hook was provided get the non-computed value from there
 			if ( hooks && "get" in hooks && (ret = hooks.get( elem, false, extra )) !== undefined ) {
 				return ret;
@@ -6305,9 +6305,9 @@ jQuery.extend({
 		}
 	},
 
-	css: function( elem, name, extra, styles ) {
+	css: function( elem, name, extra, styles ) { // extra针对尺寸， styles所有的样式计算后的值，提高性能
 		var val, num, hooks,
-			origName = jQuery.camelCase( name );
+			origName = jQuery.camelCase( name ); // name进行驼峰式转换
 
 		// Make sure that we're working with the right name
 		name = jQuery.cssProps[ origName ] || ( jQuery.cssProps[ origName ] = vendorPropName( elem.style, origName ) );
@@ -6317,13 +6317,13 @@ jQuery.extend({
 		hooks = jQuery.cssHooks[ name ] || jQuery.cssHooks[ origName ];
 
 		// If a hook was provided get the computed value from there
-		if ( hooks && "get" in hooks ) {
+		if ( hooks && "get" in hooks ) { // 处理宽高
 			val = hooks.get( elem, true, extra );
 		}
 
 		// Otherwise, if a way to get the computed value exists, use that
 		if ( val === undefined ) {
-			val = curCSS( elem, name, styles );
+			val = curCSS( elem, name, styles ); // width/height等兼容性处理
 		}
 
 		//convert "normal" to computed value
@@ -6332,14 +6332,14 @@ jQuery.extend({
 		}
 
 		// Return, converting to number if forced or a qualifier was provided and val looks numeric
-		if ( extra === "" || extra ) {
+		if ( extra === "" || extra ) { // 单位的处理
 			num = parseFloat( val );
 			return extra === true || jQuery.isNumeric( num ) ? num || 0 : val;
 		}
 		return val;
 	}
 });
-
+// _computed 计算后的样式值/
 curCSS = function( elem, name, _computed ) {
 	var width, minWidth, maxWidth,
 		computed = _computed || getStyles( elem ),
@@ -6350,7 +6350,7 @@ curCSS = function( elem, name, _computed ) {
 		style = elem.style;
 
 	if ( computed ) {
-
+		// ownerDocument 对应 elem 的 document 对象
 		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
 			ret = jQuery.style( elem, name );
 		}
@@ -6359,18 +6359,18 @@ curCSS = function( elem, name, _computed ) {
 		// A tribute to the "awesome hack by Dean Edwards"
 		// Safari 5.1.7 (at least) returns percentage for a larger set of values, but width seems to be reliably pixels
 		// this is against the CSSOM draft spec: http://dev.w3.org/csswg/cssom/#resolved-values
-		if ( rnumnonpx.test( ret ) && rmargin.test( name ) ) {
+		if ( rnumnonpx.test( ret ) && rmargin.test( name ) ) { // rmargin针对margin
 
-			// Remember the original values
+			// Remember the original values // 存值
 			width = style.width;
 			minWidth = style.minWidth;
 			maxWidth = style.maxWidth;
 
-			// Put in the new values to get a computed value out
+			// Put in the new values to get a computed value out // 改值
 			style.minWidth = style.maxWidth = style.width = ret;
 			ret = computed.width;
 
-			// Revert the changed values
+			// Revert the changed values // 还原值
 			style.width = width;
 			style.minWidth = minWidth;
 			style.maxWidth = maxWidth;
@@ -6470,17 +6470,17 @@ function getWidthOrHeight( elem, name, extra ) {
 		)
 	) + "px";
 }
-
+// elem.nodeName ==> 'div' ===> createElement('div') ===> Jquery.css()获取创建的元素的display值
 // Try to determine the default display value of an element
 function css_defaultDisplay( nodeName ) {
 	var doc = document,
-		display = elemdisplay[ nodeName ];
+		display = elemdisplay[ nodeName ]; // 排除body
 
 	if ( !display ) {
-		display = actualDisplay( nodeName, doc );
+		display = actualDisplay( nodeName, doc ); // 获取默认的display的值
 
 		// If the simple way fails, read from inside an iframe
-		if ( display === "none" || !display ) {
+		if ( display === "none" || !display ) { // 针对iframe
 			// Use the already-created iframe if possible
 			iframe = ( iframe ||
 				jQuery("<iframe frameborder='0' width='0' height='0'/>")
@@ -6505,10 +6505,10 @@ function css_defaultDisplay( nodeName ) {
 
 // Called ONLY from within css_defaultDisplay
 function actualDisplay( name, doc ) {
-	var elem = jQuery( doc.createElement( name ) ).appendTo( doc.body ),
-		display = jQuery.css( elem[0], "display" );
-	elem.remove();
-	return display;
+	var elem = jQuery( doc.createElement( name ) ).appendTo( doc.body ), // 动态创建标签，并插入到body中
+		display = jQuery.css( elem[0], "display" ); // 获取标签的display默认值
+	elem.remove(); // 删除动态创建的标签
+	return display; // 返回默认值
 }
 
 jQuery.each([ "height", "width" ], function( i, name ) {
@@ -8750,7 +8750,7 @@ function getWindow( elem ) {
 	return jQuery.isWindow( elem ) ? elem : elem.nodeType === 9 && elem.defaultView;
 }
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
-jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
+jQuery.each( { Height: "height", Width: "width" }, function( name, type ) { // 六个尺寸的操作
 	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name }, function( defaultExtra, funcName ) {
 		// margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
@@ -8760,13 +8760,13 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 			return jQuery.access( this, function( elem, type, value ) {
 				var doc;
 
-				if ( jQuery.isWindow( elem ) ) {
+				if ( jQuery.isWindow( elem ) ) { // 可视区的宽高 $(window).height()/$(window).width()
 					// As of 5/8/2012 this will yield incorrect results for Mobile Safari, but there
 					// isn't a whole lot we can do. See pull request at this URL for discussion:
 					// https://github.com/jquery/jquery/pull/764
 					return elem.document.documentElement[ "client" + name ];
 				}
-
+				// 页面的宽高 $(window).height()/$(window).width()
 				// Get document width or height
 				if ( elem.nodeType === 9 ) {
 					doc = elem.documentElement;
@@ -8782,10 +8782,10 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 
 				return value === undefined ?
 					// Get width or height on the element, requesting but not forcing parseFloat
-					jQuery.css( elem, type, extra ) :
+					jQuery.css( elem, type, extra ) : // 获取
 
 					// Set width or height on the element
-					jQuery.style( elem, type, value, extra );
+					jQuery.style( elem, type, value, extra ); // 设置
 			}, type, chainable ? margin : undefined, chainable, null );
 		};
 	});
